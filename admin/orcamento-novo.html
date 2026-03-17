@@ -195,23 +195,26 @@
 
   function populateProjectTypes() {
     const select = document.getElementById('projectType');
-    if (typeof PROJECT_TYPES !== 'undefined') {
-      PROJECT_TYPES.forEach(pt => {
+    // PROJECT_TYPES é um objeto { key: label } definido em admin.js
+    if (typeof PROJECT_TYPES !== 'undefined' && typeof PROJECT_TYPES === 'object' && !Array.isArray(PROJECT_TYPES)) {
+      Object.entries(PROJECT_TYPES).forEach(([value, label]) => {
         const opt = document.createElement('option');
-        opt.value = pt.value || pt;
-        opt.textContent = pt.label || pt;
+        opt.value = value;
+        opt.textContent = label;
         select.appendChild(opt);
       });
     } else {
       const types = [
-        { value: 'landing_page', label: 'Landing Page' },
-        { value: 'site_institucional', label: 'Site Institucional' },
-        { value: 'ecommerce', label: 'E-commerce' },
-        { value: 'sistema_web', label: 'Sistema Web' },
-        { value: 'app_mobile', label: 'App Mobile' },
-        { value: 'automacao', label: 'Automação' },
-        { value: 'consultoria', label: 'Consultoria' },
-        { value: 'outros', label: 'Outros' }
+        { value: 'landing_page',       label: 'Landing Page' },
+        { value: 'site_institucional',  label: 'Site Institucional' },
+        { value: 'ecommerce',           label: 'E-commerce' },
+        { value: 'sistema_web',         label: 'Sistema Web' },
+        { value: 'app_mobile',          label: 'App Mobile' },
+        { value: 'agente_ia',           label: 'Agente de IA' },
+        { value: 'chatbot',             label: 'Chatbot' },
+        { value: 'automacao',           label: 'Automação' },
+        { value: 'marketing_digital',   label: 'Marketing Digital' },
+        { value: 'outro',               label: 'Outro' },
       ];
       types.forEach(t => {
         const opt = document.createElement('option');
@@ -334,20 +337,27 @@
   }
 
   function buildQuote() {
+    const items    = getItems();
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const subtotal = items.reduce((s, i) => s + (i.qty || 1) * (i.unitPrice || 0), 0);
+    const total    = Math.max(0, subtotal - discount);
+
     return {
-      id: document.getElementById('quoteId').value,
-      clientName: document.getElementById('clientName').value.trim(),
-      clientPhone: document.getElementById('clientPhone').value.trim(),
-      clientEmail: document.getElementById('clientEmail').value.trim(),
-      projectType: document.getElementById('projectType').value,
-      deadline: document.getElementById('deadline').value,
+      id:            document.getElementById('quoteId').value,
+      clientName:    document.getElementById('clientName').value.trim(),
+      clientPhone:   document.getElementById('clientPhone').value.trim(),
+      clientEmail:   document.getElementById('clientEmail').value.trim(),
+      projectType:   document.getElementById('projectType').value,
+      deadline:      document.getElementById('deadline').value,
       paymentMethod: document.getElementById('paymentMethod').value,
-      status: document.getElementById('quoteStatus').value,
-      discount: parseFloat(document.getElementById('discount').value) || 0,
-      notes: document.getElementById('notes').value.trim(),
-      items: getItems(),
-      createdAt: editingId ? undefined : new Date().toISOString().slice(0, 10),
-      updatedAt: new Date().toISOString().slice(0, 10)
+      status:        document.getElementById('quoteStatus').value,
+      discount,
+      subtotal,
+      total,
+      notes:         document.getElementById('notes').value.trim(),
+      items,
+      createdAt:     editingId ? undefined : new Date().toISOString().slice(0, 10),
+      updatedAt:     new Date().toISOString().slice(0, 10),
     };
   }
 

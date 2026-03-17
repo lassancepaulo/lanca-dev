@@ -181,7 +181,7 @@
           </td>
           <td>${q.projectType || '—'}</td>
           <td><strong>${fmtMoney(total)}</strong></td>
-          <td>${statusBadge(q.status)}</td>
+          <td>${statusBadge(q.status, QUOTE_STATUS)}</td>
           <td>${fmtDate(q.createdAt || q.date)}</td>
           <td class="actions-cell">
             <button class="btn btn-icon btn-ghost btn-orange" title="Gerar PDF" onclick="downloadPDF('${q.id}')">

@@ -80,7 +80,8 @@ const PROJECT_TYPES = {
 };
 
 function statusBadge(status, map) {
-  const s = map[status] || { label: status, cls: '' };
+  const m = map || QUOTE_STATUS;
+  const s = m[status] || { label: status || '—', cls: '' };
   return `<span class="badge ${s.cls}">${s.label}</span>`;
 }
 
@@ -192,10 +193,10 @@ function generatePDF(quote) {
   y += 4;
 
   const tableRows = (quote.items || []).map(item => [
-    item.desc || '',
+    item.description || item.desc || '',
     String(item.qty || 1),
-    fmtMoney(item.price),
-    fmtMoney((item.qty || 1) * (item.price || 0)),
+    fmtMoney(item.unitPrice || item.price || 0),
+    fmtMoney((item.qty || 1) * (item.unitPrice || item.price || 0)),
   ]);
 
   doc.autoTable({
@@ -227,10 +228,20 @@ function generatePDF(quote) {
 
   y = doc.lastAutoTable.finalY + 6;
 
+  // ── Calcula totais a partir dos itens (fallback se não vieram no objeto) ──
+  const _items    = quote.items || [];
+  const _subtotal = typeof quote.subtotal === 'number'
+    ? quote.subtotal
+    : _items.reduce((s, i) => s + (i.qty || 1) * (i.unitPrice || i.price || 0), 0);
+  const _discount = parseFloat(quote.discount) || 0;
+  const _total    = typeof quote.total === 'number'
+    ? quote.total
+    : Math.max(0, _subtotal - _discount);
+
   // ── Totais ──
   const totals = [
-    ['Subtotal',  fmtMoney(quote.subtotal)],
-    ['Desconto',  `- ${fmtMoney(quote.discount)}`],
+    ['Subtotal',  fmtMoney(_subtotal)],
+    ['Desconto',  `- ${fmtMoney(_discount)}`],
   ];
 
   totals.forEach(([label, value]) => {
@@ -251,7 +262,7 @@ function generatePDF(quote) {
   doc.setFontSize(12);
   doc.setTextColor(...ORA);
   doc.text('TOTAL', W - 60, y + 4);
-  doc.text(fmtMoney(quote.total), W - 14, y + 4, { align: 'right' });
+  doc.text(fmtMoney(_total), W - 14, y + 4, { align: 'right' });
 
   y += 14;
 
