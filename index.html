@@ -531,6 +531,12 @@
                     <span>✓ Resposta em minutos</span>
                 </div>
 
+                <!-- Urgency bar -->
+                <div class="urgency-bar" id="urgencyBar">
+                    <span class="urgency-dot"></span>
+                    <span>Apenas <strong id="vagasCount">3</strong> vagas disponíveis em março — <strong>2 já reservadas</strong> hoje</span>
+                </div>
+
                 <p style="margin-top:20px;font-size:13px;color:#666;">
                     Prefere falar direto?
                     <a href="https://wa.me/5521986829331?text=Ol%C3%A1!%20Vim%20pelo%20lan%C3%A7a.dev%20e%20quero%20um%20or%C3%A7amento%20gr%C3%A1tis."
@@ -587,12 +593,49 @@
         </div>
     </footer>
 
-    <!-- WhatsApp Float -->
-    <a href="https://wa.me/5521986829331?text=Ol%C3%A1!%20Vim%20pelo%20lan%C3%A7a.dev%20e%20quero%20um%20or%C3%A7amento%20gr%C3%A1tis." class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-        </svg>
-    </a>
+    <!-- ── Chat Flutuante com bolha ──────────── -->
+    <div class="chat-float" id="chatFloat">
+        <div class="chat-bubble" id="chatBubble">
+            👋 Oi! Posso te ajudar a montar seu orçamento agora?
+        </div>
+        <div style="position:relative">
+            <a href="https://wa.me/5521986829331?text=Ol%C3%A1!%20Vim%20pelo%20lan%C3%A7a.dev%20e%20quero%20um%20or%C3%A7amento%20gr%C3%A1tis."
+               class="chat-float-btn" target="_blank" rel="noopener"
+               aria-label="Falar no WhatsApp" onclick="trackWA()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+            </a>
+            <span class="chat-badge">1</span>
+        </div>
+    </div>
+
+    <!-- ── Exit Intent Popup ──────────────────── -->
+    <div id="exitOverlay" class="exit-overlay" style="display:none" role="dialog" aria-modal="true" aria-label="Antes de sair">
+        <div class="exit-box">
+            <button class="exit-close" onclick="closeExitPopup()" aria-label="Fechar">✕</button>
+            <span class="exit-tag">⚡ Oferta especial</span>
+            <span class="exit-emoji">🎯</span>
+            <h3>Espera! Antes de sair...</h3>
+            <p>Receba um <strong>orçamento personalizado grátis</strong> no seu WhatsApp — respondemos em menos de <strong>15 minutos</strong>.</p>
+            <a href="https://wa.me/5521986829331?text=Ol%C3%A1!%20Vim%20pelo%20lan%C3%A7a.dev%20e%20vi%20a%20oferta%20especial.%20Quero%20meu%20or%C3%A7amento%20gr%C3%A1tis!"
+               class="exit-btn" target="_blank" rel="noopener" onclick="trackExitClick()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                Quero meu orçamento grátis
+            </a>
+            <p class="exit-sub">Sem compromisso. Resposta em minutos.</p>
+        </div>
+    </div>
+
+    <!-- ── Social Proof Toast ─────────────────── -->
+    <div id="spToast" class="sp-toast" style="display:none" onclick="this.style.display='none'">
+        <div class="sp-avatar" id="spAvatar">AN</div>
+        <div class="sp-info">
+            <strong id="spName">Ana N.</strong>
+            <span id="spMsg">pediu orçamento de Landing Page</span>
+            <span class="sp-time" id="spTime">há 4 min</span>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 
@@ -663,9 +706,7 @@
         });
 
         if (res.ok) {
-          success.style.display = 'block';
-          document.getElementById('leadForm').reset();
-          // Pixel Lead event
+          // Pixel Lead event antes de redirecionar
           if (window.fbq) {
             const eventId = 'lead_' + Date.now();
             fbq('track', 'Lead', { content_name: lead.project || 'Orçamento' }, { eventID: eventId });
@@ -692,6 +733,10 @@
               }).catch(() => {});
             }
           }
+          // Redirecionar para página de obrigado
+          setTimeout(() => {
+            window.location.href = '/obrigado.html?projeto=' + encodeURIComponent(lead.project || '') + '&nome=' + encodeURIComponent(lead.name || '');
+          }, 400);
         } else {
           throw new Error('Server error');
         }
@@ -707,6 +752,131 @@
     function trackWA() {
       if (window.fbq) fbq('track', 'Contact');
     }
+
+    function trackExitClick() {
+      if (window.fbq) fbq('track', 'InitiateCheckout', { content_name: 'exit_intent' });
+    }
+    </script>
+
+    <!-- ── Exit Intent + Social Proof + Urgência ── -->
+    <script>
+    (function () {
+      // ── Exit Intent ──────────────────────────────
+      let exitShown = sessionStorage.getItem('exitShown');
+      let exitTimer;
+
+      function showExitPopup() {
+        if (exitShown) return;
+        exitShown = true;
+        sessionStorage.setItem('exitShown', '1');
+        document.getElementById('exitOverlay').style.display = 'flex';
+        if (window.fbq) fbq('track', 'ViewContent', { content_name: 'exit_intent_popup' });
+      }
+
+      // Desktop: detecta mouse saindo pelo topo
+      document.addEventListener('mouseleave', function (e) {
+        if (e.clientY <= 5 && !exitShown) {
+          // Só depois de 10s na página
+          if (performance.now() > 10000) showExitPopup();
+        }
+      });
+
+      // Mobile: detecta scroll para cima rápido (comportamento de saída)
+      let lastScrollY = 0, lastScrollTime = Date.now();
+      window.addEventListener('scroll', function () {
+        const now = Date.now();
+        const delta = lastScrollY - window.scrollY;
+        if (delta > 80 && (now - lastScrollTime) < 200 && window.scrollY < 200 && !exitShown) {
+          if (performance.now() > 15000) showExitPopup();
+        }
+        lastScrollY = window.scrollY;
+        lastScrollTime = now;
+      }, { passive: true });
+
+      // Fechar popup ao clicar fora da caixa
+      document.getElementById('exitOverlay').addEventListener('click', function (e) {
+        if (e.target === this) closeExitPopup();
+      });
+
+      // Fechar com ESC
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeExitPopup();
+      });
+    })();
+
+    function closeExitPopup() {
+      const overlay = document.getElementById('exitOverlay');
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.2s';
+      setTimeout(() => overlay.style.display = 'none', 200);
+    }
+
+    // ── Social Proof ─────────────────────────────
+    (function () {
+      const leads = [
+        { name: 'Ana P.',      initials: 'AP', project: 'Landing Page',        city: 'SP', time: '2 min' },
+        { name: 'Carlos M.',   initials: 'CM', project: 'Site Institucional',   city: 'RJ', time: '8 min' },
+        { name: 'Juliana F.',  initials: 'JF', project: 'Agente de IA',         city: 'MG', time: '14 min' },
+        { name: 'Ricardo S.',  initials: 'RS', project: 'Sistema Web',          city: 'PR', time: '21 min' },
+        { name: 'Fernanda L.', initials: 'FL', project: 'E-commerce',           city: 'SC', time: '29 min' },
+        { name: 'Bruno T.',    initials: 'BT', project: 'App Mobile',           city: 'BA', time: '37 min' },
+        { name: 'Mariana O.',  initials: 'MO', project: 'Landing Page',         city: 'DF', time: '45 min' },
+        { name: 'Rafael K.',   initials: 'RK', project: 'Automação',            city: 'RS', time: '1h' },
+        { name: 'Priscila V.', initials: 'PV', project: 'Marketing Digital',    city: 'CE', time: '1h 12min' },
+        { name: 'Diego A.',    initials: 'DA', project: 'Chatbot',              city: 'GO', time: '1h 28min' },
+      ];
+
+      let idx = 0;
+      const toast = document.getElementById('spToast');
+
+      function showNext() {
+        const l = leads[idx % leads.length];
+        idx++;
+        document.getElementById('spAvatar').textContent = l.initials;
+        document.getElementById('spName').textContent   = l.name + ' (' + l.city + ')';
+        document.getElementById('spMsg').textContent    = 'pediu orçamento de ' + l.project;
+        document.getElementById('spTime').textContent   = 'há ' + l.time;
+
+        toast.style.display = 'flex';
+        toast.classList.remove('hiding');
+
+        clearTimeout(window._spHideTimer);
+        window._spHideTimer = setTimeout(() => {
+          toast.classList.add('hiding');
+          setTimeout(() => toast.style.display = 'none', 350);
+        }, 5000);
+      }
+
+      // Primeira aparição após 12s, depois a cada 22s
+      setTimeout(() => {
+        showNext();
+        setInterval(showNext, 22000);
+      }, 12000);
+    })();
+
+    // ── Urgência: vagas restantes dinâmico ───────
+    (function () {
+      // Simula vagas baseado no dia do mês (cria sensação de escassez realista)
+      const day = new Date().getDate();
+      const vagas = Math.max(1, 5 - Math.floor(day / 7));
+      const el = document.getElementById('vagasCount');
+      if (el) el.textContent = vagas;
+    })();
+
+    // ── Chat bubble: fecha ao clicar ─────────────
+    (function () {
+      const bubble = document.getElementById('chatBubble');
+      if (!bubble) return;
+      // Esconde a bolha após 8s
+      setTimeout(() => {
+        if (bubble) {
+          bubble.style.transition = 'opacity 0.5s';
+          bubble.style.opacity = '0';
+          setTimeout(() => bubble.style.display = 'none', 500);
+        }
+      }, 8000);
+      bubble.addEventListener('click', () => bubble.style.display = 'none');
+    })();
     </script>
 
     <script>
