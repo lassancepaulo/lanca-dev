@@ -52,6 +52,17 @@ input, select, textarea { font-family: inherit; }
   min-height: 100vh;
 }
 
+/* ── Main content (offset da sidebar fixa) ──────────── */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  min-width: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 /* ── Sidebar ─────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-w);
