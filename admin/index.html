@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — lança.dev Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="14" height="32" viewBox="0 0 44 100" fill="none"><path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/></svg>
+        <div class="sidebar-logo-text">lança<span>.dev</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Principal</div>
+        <a href="index.html" class="active"><i class="fas fa-chart-bar"></i> Dashboard</a>
+        <a href="leads.html"><i class="fas fa-users"></i> Leads / CRM</a>
+        <a href="orcamentos.html"><i class="fas fa-file-invoice-dollar"></i> Orçamentos</a>
+        <div class="nav-section">Sistema</div>
+        <a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
+        <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver site</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <!-- Header -->
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-page-title">Dashboard</h1>
+          <p class="admin-page-sub">Visão geral do painel lança.dev</p>
+        </div>
+        <div class="header-actions">
+          <span class="badge-today" id="todayDate"></span>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card stat-orange">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <div class="stat-body">
+            <div class="stat-value" id="statLeads">—</div>
+            <div class="stat-label">Total de Leads</div>
+          </div>
+        </div>
+        <div class="stat-card stat-blue">
+          <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+          <div class="stat-body">
+            <div class="stat-value" id="statQuotes">—</div>
+            <div class="stat-label">Orçamentos</div>
+          </div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+          <div class="stat-body">
+            <div class="stat-value stat-value--sm" id="statFat">—</div>
+            <div class="stat-label">Faturamento Estimado</div>
+          </div>
+        </div>
+        <div class="stat-card stat-yellow">
+          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+          <div class="stat-body">
+            <div class="stat-value" id="statConv">—</div>
+            <div class="stat-label">Taxa de Conversão</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mid Grid: Leads Recentes + Orçamentos Recentes -->
+      <div class="two-col-grid">
+
+        <!-- Leads Recentes -->
+        <div class="admin-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-users text-orange"></i> Leads Recentes</div>
+            <a href="leads.html" class="btn btn-ghost btn-sm">Ver todos</a>
+          </div>
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Projeto</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="leadsBody">
+                <tr>
+                  <td colspan="5" class="text-muted text-center" style="padding:24px">
+                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Orçamentos Recentes -->
+        <div class="admin-card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-file-invoice-dollar text-blue"></i> Orçamentos Recentes</div>
+            <a href="orcamentos.html" class="btn btn-ghost btn-sm">Ver todos</a>
+          </div>
+          <div class="table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="quotesBody">
+                <tr>
+                  <td colspan="4" class="text-muted text-center" style="padding:24px">
+                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Chart Card -->
+      <div class="admin-card chart-card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-chart-bar text-orange"></i> Leads por mês</div>
+          <span class="text-muted" style="font-size:13px">Últimos 6 meses</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="leadsChart"></canvas>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/dataService.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    requireAuth();
+
+    // Data de hoje no header
+    document.getElementById('todayDate').textContent = new Date().toLocaleDateString('pt-BR', {
+      weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+    async function loadDashboard() {
+      const stats = await DS.getStats();
+
+      // Preenche stats cards
+      document.getElementById('statLeads').textContent = stats.totalLeads;
+      document.getElementById('statQuotes').textContent = stats.totalQuotes;
+      document.getElementById('statFat').textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.faturamento);
+      document.getElementById('statConv').textContent = stats.conversion + '%';
+
+      // Leads recentes (últimos 5)
+      const recentLeads = stats.leads.slice(-5).reverse();
+      const tbody = document.getElementById('leadsBody');
+      tbody.innerHTML = recentLeads.length === 0
+        ? '<tr><td colspan="5" class="text-muted text-center" style="padding:24px">Nenhum lead ainda</td></tr>'
+        : recentLeads.map(l => `
+          <tr>
+            <td>
+              <div class="td-name">${l.name}</div>
+              <div class="td-sub">${l.email || '—'}</div>
+            </td>
+            <td>${l.project || '—'}</td>
+            <td>${statusBadge(l.status, LEAD_STATUS)}</td>
+            <td>${fmtDate(l.createdAt)}</td>
+            <td>
+              <a href="https://wa.me/55${l.phone}" target="_blank" class="btn btn-ghost btn-sm btn-icon" title="Abrir WhatsApp">
+                <i class="fab fa-whatsapp text-orange"></i>
+              </a>
+            </td>
+          </tr>`).join('');
+
+      // Orçamentos recentes (últimos 5)
+      const recentQuotes = stats.quotes.slice(-5).reverse();
+      const qtbody = document.getElementById('quotesBody');
+      qtbody.innerHTML = recentQuotes.length === 0
+        ? '<tr><td colspan="4" class="text-muted text-center" style="padding:24px">Nenhum orçamento ainda</td></tr>'
+        : recentQuotes.map(q => `
+          <tr>
+            <td class="text-orange">${q.id}</td>
+            <td>${q.clientName}</td>
+            <td>${fmtMoney(q.total)}</td>
+            <td>${statusBadge(q.status, QUOTE_STATUS)}</td>
+          </tr>`).join('');
+
+      // Chart leads por mês
+      buildChart(stats.leads);
+    }
+
+    function buildChart(leads) {
+      const months = [];
+      const counts = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const label = d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+        months.push(label);
+        counts.push(leads.filter(l => {
+          const ld = new Date(l.createdAt);
+          return ld.getMonth() === d.getMonth() && ld.getFullYear() === d.getFullYear();
+        }).length);
+      }
+
+      new Chart(document.getElementById('leadsChart'), {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Leads',
+            data: counts,
+            backgroundColor: 'rgba(255,77,0,0.7)',
+            borderColor: '#FF4D00',
+            borderWidth: 1,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#888', stepSize: 1 },
+              grid: { color: '#222' }
+            },
+            x: {
+              ticks: { color: '#888' },
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

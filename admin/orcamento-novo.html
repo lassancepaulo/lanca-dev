@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Orçamento — lança.dev Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="14" height="32" viewBox="0 0 44 100" fill="none"><path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/></svg>
+      <div class="sidebar-logo-text">lança<span>.dev</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Principal</div>
+      <a href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      <a href="leads.html"><i class="fas fa-users"></i> Leads / CRM</a>
+      <a href="orcamentos.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Orçamentos</a>
+      <div class="nav-section">Sistema</div>
+      <a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
+      <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver site</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1 id="pageTitle">Novo Orçamento</h1>
+        <p>Criar proposta comercial</p>
+      </div>
+    </div>
+
+    <form id="quoteForm" onsubmit="return false;">
+
+      <!-- Seção 1: Dados do Cliente -->
+      <div class="card form-section">
+        <div class="form-section-header">
+          <i class="fas fa-user"></i>
+          <h2>Dados do Cliente</h2>
+        </div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="clientName">Nome Completo *</label>
+            <input type="text" class="form-control" id="clientName" required placeholder="Nome do cliente">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="clientPhone">WhatsApp *</label>
+            <input type="text" class="form-control" id="clientPhone" required placeholder="21999999999">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="clientEmail">E-mail</label>
+            <input type="email" class="form-control" id="clientEmail" placeholder="email@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="quoteId">Número do Orçamento</label>
+            <input type="text" class="form-control" id="quoteId" readonly placeholder="Auto-gerado">
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 2: Projeto -->
+      <div class="card form-section">
+        <div class="form-section-header">
+          <i class="fas fa-briefcase"></i>
+          <h2>Projeto</h2>
+        </div>
+        <div class="form-grid form-grid-3">
+          <div class="form-group">
+            <label class="form-label" for="projectType">Tipo de Projeto *</label>
+            <select class="form-control" id="projectType" required>
+              <option value="">Selecione...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="deadline">Prazo Desejado</label>
+            <input type="date" class="form-control" id="deadline">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="paymentMethod">Forma de Pagamento</label>
+            <select class="form-control" id="paymentMethod">
+              <option value="pix">PIX</option>
+              <option value="boleto">Boleto</option>
+              <option value="cartao_credito">Cartão de Crédito</option>
+              <option value="cartao_debito">Cartão de Débito</option>
+              <option value="transferencia">Transferência Bancária</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="quoteStatus">Status</label>
+            <select class="form-control" id="quoteStatus">
+              <option value="pendente">Pendente</option>
+              <option value="aprovado">Aprovado</option>
+              <option value="pago">Pago</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 3: Itens do Orçamento -->
+      <div class="card form-section">
+        <div class="form-section-header">
+          <i class="fas fa-list"></i>
+          <h2>Itens do Orçamento</h2>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" id="itemsTable">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th style="width:80px">Qtd</th>
+                <th style="width:140px">Valor Unit. (R$)</th>
+                <th style="width:130px">Total</th>
+                <th style="width:50px"></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody">
+              <!-- itens adicionados aqui -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="items-actions">
+          <button type="button" class="btn btn-outline btn-sm" onclick="addItem()">
+            <i class="fas fa-plus"></i> Adicionar Item
+          </button>
+        </div>
+
+        <div class="totals-area">
+          <div class="totals-row">
+            <span class="totals-label">Subtotal</span>
+            <span id="subtotalDisplay">R$ 0,00</span>
+          </div>
+          <div class="totals-row">
+            <span class="totals-label">Desconto (R$)</span>
+            <input type="number" class="form-control form-control-sm totals-discount" id="discount" value="0" min="0" step="0.01" oninput="updateTotals()">
+          </div>
+          <div class="totals-row totals-total">
+            <span class="totals-label">Total</span>
+            <span id="totalDisplay" class="total-value">R$ 0,00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 4: Observações -->
+      <div class="card form-section">
+        <div class="form-section-header">
+          <i class="fas fa-sticky-note"></i>
+          <h2>Observações</h2>
+        </div>
+        <div class="form-group">
+          <textarea class="form-control" id="notes" rows="4" placeholder="Notas internas, condições especiais..."></textarea>
+        </div>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="form-actions">
+        <a href="orcamentos.html" class="btn btn-outline">Cancelar</a>
+        <button type="button" class="btn btn-outline" onclick="saveQuote()">
+          <i class="fas fa-save"></i> Salvar Orçamento
+        </button>
+        <button type="button" class="btn btn-primary" onclick="saveAndPDF()">
+          <i class="fas fa-file-pdf"></i> Salvar e Gerar PDF
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+</div>
+
+<script src="../js/dataService.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+  requireAuth();
+
+  let editingId = null;
+
+  function getUrlParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function populateProjectTypes() {
+    const select = document.getElementById('projectType');
+    if (typeof PROJECT_TYPES !== 'undefined') {
+      PROJECT_TYPES.forEach(pt => {
+        const opt = document.createElement('option');
+        opt.value = pt.value || pt;
+        opt.textContent = pt.label || pt;
+        select.appendChild(opt);
+      });
+    } else {
+      const types = [
+        { value: 'landing_page', label: 'Landing Page' },
+        { value: 'site_institucional', label: 'Site Institucional' },
+        { value: 'ecommerce', label: 'E-commerce' },
+        { value: 'sistema_web', label: 'Sistema Web' },
+        { value: 'app_mobile', label: 'App Mobile' },
+        { value: 'automacao', label: 'Automação' },
+        { value: 'consultoria', label: 'Consultoria' },
+        { value: 'outros', label: 'Outros' }
+      ];
+      types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.value;
+        opt.textContent = t.label;
+        select.appendChild(opt);
+      });
+    }
+  }
+
+  function initForm() {
+    populateProjectTypes();
+    editingId = getUrlParam('id');
+
+    if (editingId) {
+      document.getElementById('pageTitle').textContent = 'Editar Orçamento';
+      const quotes = DS.getQuotes();
+      const quote = quotes.find(q => q.id === editingId);
+      if (quote) {
+        document.getElementById('quoteId').value = quote.id;
+        document.getElementById('clientName').value = quote.clientName || '';
+        document.getElementById('clientPhone').value = quote.clientPhone || '';
+        document.getElementById('clientEmail').value = quote.clientEmail || '';
+        document.getElementById('projectType').value = quote.projectType || '';
+        document.getElementById('deadline').value = quote.deadline || '';
+        document.getElementById('paymentMethod').value = quote.paymentMethod || 'pix';
+        document.getElementById('quoteStatus').value = quote.status || 'pendente';
+        document.getElementById('discount').value = quote.discount || 0;
+        document.getElementById('notes').value = quote.notes || '';
+
+        const items = quote.items || [];
+        items.forEach(item => addItem(item));
+        updateTotals();
+      } else {
+        showToast('Orçamento não encontrado.', 'error');
+        editingId = null;
+        document.getElementById('quoteId').value = DS.generateQuoteId();
+        addItem();
+      }
+    } else {
+      document.getElementById('quoteId').value = DS.generateQuoteId();
+      addItem();
+    }
+  }
+
+  let itemIndex = 0;
+
+  function addItem(data) {
+    const idx = itemIndex++;
+    const tbody = document.getElementById('itemsBody');
+    const tr = document.createElement('tr');
+    tr.dataset.idx = idx;
+    tr.innerHTML = `
+      <td>
+        <input type="text" class="form-control form-control-sm" name="item_desc_${idx}"
+          placeholder="Descrição do item" value="${data && data.description ? escapeHtml(data.description) : ''}"
+          oninput="updateTotals()">
+      </td>
+      <td>
+        <input type="number" class="form-control form-control-sm" name="item_qty_${idx}"
+          value="${data && data.qty !== undefined ? data.qty : 1}" min="1" step="1"
+          oninput="updateTotals()">
+      </td>
+      <td>
+        <input type="number" class="form-control form-control-sm" name="item_price_${idx}"
+          value="${data && data.unitPrice !== undefined ? data.unitPrice : ''}"
+          min="0" step="0.01" placeholder="0,00"
+          oninput="updateTotals()">
+      </td>
+      <td class="item-total" id="item_total_${idx}">R$ 0,00</td>
+      <td>
+        <button type="button" class="btn btn-icon btn-ghost btn-danger btn-sm" onclick="removeItem(this)" title="Remover item">
+          <i class="fas fa-times"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    updateTotals();
+  }
+
+  function removeItem(btn) {
+    const tr = btn.closest('tr');
+    tr.remove();
+    updateTotals();
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function getItems() {
+    const rows = document.querySelectorAll('#itemsBody tr');
+    return Array.from(rows).map(tr => {
+      const idx = tr.dataset.idx;
+      const desc = tr.querySelector(`[name="item_desc_${idx}"]`)?.value || '';
+      const qty = parseFloat(tr.querySelector(`[name="item_qty_${idx}"]`)?.value) || 1;
+      const unitPrice = parseFloat(tr.querySelector(`[name="item_price_${idx}"]`)?.value) || 0;
+      return { description: desc, qty, unitPrice };
+    });
+  }
+
+  function updateTotals() {
+    const rows = document.querySelectorAll('#itemsBody tr');
+    let subtotal = 0;
+    rows.forEach(tr => {
+      const idx = tr.dataset.idx;
+      const qty = parseFloat(tr.querySelector(`[name="item_qty_${idx}"]`)?.value) || 1;
+      const price = parseFloat(tr.querySelector(`[name="item_price_${idx}"]`)?.value) || 0;
+      const lineTotal = qty * price;
+      subtotal += lineTotal;
+      const cell = document.getElementById(`item_total_${idx}`);
+      if (cell) cell.textContent = fmtMoney(lineTotal);
+    });
+
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const total = Math.max(0, subtotal - discount);
+
+    document.getElementById('subtotalDisplay').textContent = fmtMoney(subtotal);
+    document.getElementById('totalDisplay').textContent = fmtMoney(total);
+  }
+
+  function buildQuote() {
+    return {
+      id: document.getElementById('quoteId').value,
+      clientName: document.getElementById('clientName').value.trim(),
+      clientPhone: document.getElementById('clientPhone').value.trim(),
+      clientEmail: document.getElementById('clientEmail').value.trim(),
+      projectType: document.getElementById('projectType').value,
+      deadline: document.getElementById('deadline').value,
+      paymentMethod: document.getElementById('paymentMethod').value,
+      status: document.getElementById('quoteStatus').value,
+      discount: parseFloat(document.getElementById('discount').value) || 0,
+      notes: document.getElementById('notes').value.trim(),
+      items: getItems(),
+      createdAt: editingId ? undefined : new Date().toISOString().slice(0, 10),
+      updatedAt: new Date().toISOString().slice(0, 10)
+    };
+  }
+
+  function validateForm() {
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const type = document.getElementById('projectType').value;
+    if (!name) { showToast('Preencha o nome do cliente.', 'error'); return false; }
+    if (!phone) { showToast('Preencha o WhatsApp do cliente.', 'error'); return false; }
+    if (!type) { showToast('Selecione o tipo de projeto.', 'error'); return false; }
+    return true;
+  }
+
+  function saveQuote(redirectAfter) {
+    if (!validateForm()) return false;
+    const quote = buildQuote();
+    DS.saveQuote(quote);
+    showToast(editingId ? 'Orçamento atualizado!' : 'Orçamento salvo!', 'success');
+    if (redirectAfter !== false) {
+      setTimeout(() => { window.location.href = 'orcamentos.html'; }, 900);
+    }
+    return quote;
+  }
+
+  function loadJsPDF(callback) {
+    if (window.jspdf) { callback(); return; }
+    const s1 = document.createElement('script');
+    s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
+      s2.onload = callback;
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s1);
+  }
+
+  function saveAndPDF() {
+    if (!validateForm()) return;
+    const quote = buildQuote();
+    DS.saveQuote(quote);
+    showToast('Orçamento salvo! Gerando PDF...', 'success');
+    loadJsPDF(() => {
+      generatePDF(quote);
+    });
+  }
+
+  initForm();
+</script>
+</body>
+</html>

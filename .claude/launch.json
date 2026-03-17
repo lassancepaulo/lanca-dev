@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lanca-dev",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["-e", "const http=require('http'),fs=require('fs'),path=require('path');http.createServer((req,res)=>{let f=path.join(process.cwd(),req.url==='/'?'index.html':req.url);const ext=path.extname(f);const m={'html':'text/html','css':'text/css','js':'text/javascript'};try{res.writeHead(200,{'Content-Type':m[ext.slice(1)]||'text/plain'});res.end(fs.readFileSync(f))}catch{res.writeHead(404);res.end('Not found')}}).listen(3030,()=>console.log('OK'))"],
+      "port": 3030
+    }
+  ]
+}

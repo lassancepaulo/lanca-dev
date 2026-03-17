@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads / CRM — lança.dev Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="14" height="32" viewBox="0 0 44 100" fill="none"><path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/></svg>
+      <div class="sidebar-logo-text">lança<span>.dev</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Principal</div>
+      <a href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      <a href="leads.html" class="active"><i class="fas fa-users"></i> Leads / CRM</a>
+      <a href="orcamentos.html"><i class="fas fa-file-invoice-dollar"></i> Orçamentos</a>
+      <div class="nav-section">Sistema</div>
+      <a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
+      <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver site</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1>Leads / CRM</h1>
+        <p>Gerenciamento de contatos e oportunidades</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-outline" onclick="exportCSV()">
+          <i class="fas fa-download"></i> Exportar CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input
+        type="text"
+        id="searchInput"
+        class="form-control"
+        placeholder="Buscar por nome, e-mail ou telefone..."
+      >
+      <select id="filterStatus" class="form-control">
+        <option value="">Todos os status</option>
+        <option value="novo">Novo</option>
+        <option value="em_contato">Em contato</option>
+        <option value="proposta">Proposta enviada</option>
+        <option value="fechado">Fechado</option>
+        <option value="perdido">Perdido</option>
+      </select>
+      <select id="filterOrigem" class="form-control">
+        <option value="">Todas as origens</option>
+        <option value="site">Site</option>
+        <option value="instagram">Instagram</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="indicacao">Indicação</option>
+        <option value="outros">Outros</option>
+      </select>
+      <select id="filterMes" class="form-control">
+        <option value="">Todos os meses</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="table" id="leadsTable">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>WhatsApp</th>
+              <th>Projeto</th>
+              <th>Origem</th>
+              <th>Status</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="leadsBody">
+            <tr>
+              <td colspan="7" class="text-center text-muted">Carregando leads...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal Editar Lead -->
+<div id="editModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Editar Lead</h3>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-control" id="editStatus">
+          <option value="novo">Novo</option>
+          <option value="em_contato">Em contato</option>
+          <option value="proposta">Proposta enviada</option>
+          <option value="fechado">Fechado ✓</option>
+          <option value="perdido">Perdido</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notas internas</label>
+        <textarea class="form-control" id="editNotes" rows="3" placeholder="Anotações sobre este lead..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="saveLead()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/dataService.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+  requireAuth();
+
+  let allLeads = [];
+
+  function populateMonthFilter() {
+    const select = document.getElementById('filterMes');
+    const months = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    const now = new Date();
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = `${months[d.getMonth()]} ${d.getFullYear()}`;
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = label;
+      select.appendChild(opt);
+    }
+  }
+
+  function loadLeads() {
+    allLeads = DS.getLeads();
+    renderTable(allLeads);
+  }
+
+  function renderTable(leads) {
+    const tbody = document.getElementById('leadsBody');
+    if (!leads || leads.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum lead encontrado.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = leads.map(lead => {
+      const phone = lead.phone || lead.whatsapp || '';
+      const waLink = phone ? `https://wa.me/${phone.replace(/\D/g, '')}` : '#';
+      const origem = lead.origem || lead.source || 'outros';
+      const origemLabel = {
+        site: 'Site', instagram: 'Instagram', whatsapp: 'WhatsApp',
+        indicacao: 'Indicação', outros: 'Outros'
+      }[origem] || origem;
+
+      return `
+        <tr>
+          <td>
+            <div class="lead-name">${lead.name || '—'}</div>
+            <div class="text-muted text-small">${lead.email || ''}</div>
+          </td>
+          <td>${phone || '—'}</td>
+          <td>${lead.projectType || lead.project || '—'}</td>
+          <td><span class="badge badge-neutral">${origemLabel}</span></td>
+          <td>${statusBadge(lead.status)}</td>
+          <td>${fmtDate(lead.createdAt || lead.date)}</td>
+          <td class="actions-cell">
+            <a href="${waLink}" target="_blank" class="btn btn-icon btn-ghost btn-orange" title="Abrir WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <button class="btn btn-icon btn-ghost" title="Editar status" onclick="openEditModal('${lead.id}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-icon btn-ghost btn-danger" title="Excluir lead" onclick="deleteLead('${lead.id}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function filterLeads() {
+    const search = document.getElementById('searchInput').value.toLowerCase().trim();
+    const status = document.getElementById('filterStatus').value;
+    const origem = document.getElementById('filterOrigem').value;
+    const mes = document.getElementById('filterMes').value;
+
+    const filtered = allLeads.filter(lead => {
+      const matchSearch = !search || [
+        lead.name, lead.email, lead.phone, lead.whatsapp
+      ].some(f => f && f.toLowerCase().includes(search));
+
+      const matchStatus = !status || lead.status === status;
+
+      const leadOrigem = lead.origem || lead.source || 'outros';
+      const matchOrigem = !origem || leadOrigem === origem;
+
+      let matchMes = true;
+      if (mes) {
+        const dateStr = lead.createdAt || lead.date || '';
+        matchMes = dateStr.startsWith(mes);
+      }
+
+      return matchSearch && matchStatus && matchOrigem && matchMes;
+    });
+
+    renderTable(filtered);
+  }
+
+  function openEditModal(id) {
+    const lead = allLeads.find(l => l.id === id);
+    if (!lead) return;
+    document.getElementById('editId').value = id;
+    document.getElementById('editStatus').value = lead.status || 'novo';
+    document.getElementById('editNotes').value = lead.notes || '';
+    document.getElementById('editModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('editModal').classList.add('hidden');
+  }
+
+  function saveLead() {
+    const id = document.getElementById('editId').value;
+    const status = document.getElementById('editStatus').value;
+    const notes = document.getElementById('editNotes').value;
+    DS.updateLead(id, { status, notes });
+    showToast('Lead atualizado com sucesso!', 'success');
+    closeModal();
+    loadLeads();
+  }
+
+  function deleteLead(id) {
+    confirmDialog('Tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita.', () => {
+      DS.deleteLead(id);
+      showToast('Lead excluído.', 'info');
+      loadLeads();
+    });
+  }
+
+  function exportCSV() {
+    const leads = DS.getLeads();
+    if (!leads || leads.length === 0) {
+      showToast('Nenhum lead para exportar.', 'warning');
+      return;
+    }
+    const headers = ['ID', 'Nome', 'Email', 'WhatsApp', 'Projeto', 'Origem', 'Status', 'Data', 'Notas'];
+    const rows = leads.map(l => [
+      l.id || '',
+      l.name || '',
+      l.email || '',
+      l.phone || l.whatsapp || '',
+      l.projectType || l.project || '',
+      l.origem || l.source || '',
+      l.status || '',
+      l.createdAt || l.date || '',
+      (l.notes || '').replace(/,/g, ';').replace(/\n/g, ' ')
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leads-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('CSV exportado com sucesso!', 'success');
+  }
+
+  // Event listeners
+  document.getElementById('searchInput').addEventListener('input', filterLeads);
+  document.getElementById('filterStatus').addEventListener('change', filterLeads);
+  document.getElementById('filterOrigem').addEventListener('change', filterLeads);
+  document.getElementById('filterMes').addEventListener('change', filterLeads);
+
+  // Fechar modal ao clicar fora
+  document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  populateMonthFilter();
+  loadLeads();
+</script>
+</body>
+</html>

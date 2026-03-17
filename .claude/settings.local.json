@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where python:*)",
+      "Bash(where python3:*)",
+      "Bash(where node:*)",
+      "Bash(where node.exe)",
+      "Bash(where python3.exe)",
+      "Read(//c/Windows/System32/WindowsPowerShell/v1.0/**)",
+      "Bash(where powershell.exe)",
+      "Bash(ls \"C:\\\\Users\\\\lassa\\\\Site de venda de projetos digitais\\\\admin\"\" 2>/dev/null || echo \"Directory does not exist \")",
+      "Bash(\"C:\\\\Users\\\\lassa\\\\Site de:*)",
+      "Bash(node --check server.js)",
+      "Bash(node --check js/admin.js)",
+      "Bash(node --check js/dataService.js)"
+    ]
+  }
+}

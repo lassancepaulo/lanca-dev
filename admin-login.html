@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — lança.dev Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #FF4D00;
+      --orange-hover: #e64400;
+      --bg: #0A0A0A;
+      --card-bg: #161616;
+      --border: #222;
+      --input-bg: #1E1E1E;
+      --input-border: #2A2A2A;
+      --input-border-focus: #FF4D00;
+      --text: #F0F0F0;
+      --text-muted: #888;
+      --error-bg: rgba(255, 60, 60, 0.12);
+      --error-border: rgba(255, 60, 60, 0.35);
+      --error-text: #ff6b6b;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .login-logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      color: #F0F0F0;
+      letter-spacing: -0.5px;
+    }
+
+    .login-logo-text span {
+      color: var(--orange);
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+    }
+
+    .login-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i.input-icon {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 12px 14px 12px 40px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--input-border-focus);
+    }
+
+    .form-group input::placeholder {
+      color: #444;
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+
+    .toggle-pass:hover {
+      color: var(--text);
+    }
+
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--error-text);
+    }
+
+    .error-msg i {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 4px;
+    }
+
+    .btn-login:hover {
+      background: var(--orange-hover);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: #444;
+    }
+
+    /* Glow sutil no fundo */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255,77,0,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="login-logo">
+      <svg width="14" height="32" viewBox="0 0 44 100" fill="none">
+        <path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/>
+      </svg>
+      <div class="login-logo-text">lança<span>.dev</span></div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-title">Acesso ao painel</div>
+      <div class="login-subtitle">Entre com suas credenciais para continuar</div>
+
+      <div class="error-msg" id="errorMsg">
+        <i class="fas fa-circle-exclamation"></i>
+        Usuário ou senha incorretos. Tente novamente.
+      </div>
+
+      <form onsubmit="doLogin(event)">
+        <div class="form-group">
+          <label for="user">Usuário</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user input-icon"></i>
+            <input
+              type="text"
+              id="user"
+              placeholder="Digite seu usuário"
+              autocomplete="username"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pass">Senha</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input
+              type="password"
+              id="pass"
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="toggle-pass" id="togglePass" onclick="togglePassword()" aria-label="Mostrar/ocultar senha">
+              <i class="fas fa-eye" id="toggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login">
+          <i class="fas fa-arrow-right-to-bracket"></i>
+          Entrar no painel
+        </button>
+      </form>
+    </div>
+
+    <div class="login-footer">lança.dev &copy; 2025 — Área restrita</div>
+  </div>
+
+  <script>
+    const USERS = { lanca: 'lanca2025' };
+
+    function doLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('user').value.trim();
+      const pass = document.getElementById('pass').value;
+      if (USERS[user] === pass) {
+        sessionStorage.setItem('lancaAdmin', 'true');
+        window.location.href = 'admin/index.html';
+      } else {
+        document.getElementById('errorMsg').style.display = 'flex';
+        setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 4000);
+      }
+    }
+
+    function togglePassword() {
+      const passInput = document.getElementById('pass');
+      const icon = document.getElementById('toggleIcon');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passInput.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    // Se já logado, redireciona
+    if (sessionStorage.getItem('lancaAdmin') === 'true') {
+      window.location.href = 'admin/index.html';
+    }
+  </script>
+</body>
+</html>

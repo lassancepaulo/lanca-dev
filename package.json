@@ -1,0 +1,15 @@
+{
+  "name": "lanca-dev",
+  "version": "1.0.0",
+  "description": "Lança.dev — Agência digital que entrega projetos em dias",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Lança.dev",
+  "license": "UNLICENSED"
+}

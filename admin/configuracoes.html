@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações — lança.dev Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="14" height="32" viewBox="0 0 44 100" fill="none"><path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/></svg>
+      <div class="sidebar-logo-text">lança<span>.dev</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Principal</div>
+      <a href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
+      <a href="leads.html"><i class="fas fa-users"></i> Leads / CRM</a>
+      <a href="orcamentos.html"><i class="fas fa-file-invoice-dollar"></i> Orçamentos</a>
+      <div class="nav-section">Sistema</div>
+      <a href="configuracoes.html" class="active"><i class="fas fa-cog"></i> Configurações</a>
+      <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver site</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <div class="page-header">
+      <div class="page-header-info">
+        <h1>Configurações</h1>
+        <p>Pixel, GTM e preferências do sistema</p>
+      </div>
+    </div>
+
+    <!-- 1. Facebook Pixel -->
+    <div class="card settings-section">
+      <div class="settings-section-header">
+        <div class="settings-icon settings-icon-blue">
+          <i class="fab fa-facebook"></i>
+        </div>
+        <div>
+          <h2>Facebook Pixel</h2>
+          <p class="text-muted text-small">Configure para rastrear conversões e otimizar anúncios.</p>
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="fbPixelId">Pixel ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="fbPixelId"
+            placeholder="123456789012345"
+          >
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="fbAccessToken">Access Token</label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              class="form-control"
+              id="fbAccessToken"
+              placeholder="Token para Conversions API"
+            >
+            <button type="button" class="btn-toggle-pass" onclick="togglePass('fbAccessToken', this)" tabindex="-1">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Google Tag Manager -->
+    <div class="card settings-section">
+      <div class="settings-section-header">
+        <div class="settings-icon settings-icon-red">
+          <i class="fab fa-google"></i>
+        </div>
+        <div>
+          <h2>Google Tag Manager</h2>
+          <p class="text-muted text-small">Gerencie todos os seus scripts de rastreamento em um só lugar.</p>
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="gtmId">GTM Container ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="gtmId"
+            placeholder="GTM-XXXXXXX"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Contato & WhatsApp -->
+    <div class="card settings-section">
+      <div class="settings-section-header">
+        <div class="settings-icon settings-icon-green">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div>
+          <h2>WhatsApp de Contato</h2>
+          <p class="text-muted text-small">Usado nos botões CTA do site público para iniciar conversas.</p>
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="whatsapp">Número com DDD</label>
+          <input
+            type="text"
+            class="form-control"
+            id="whatsapp"
+            placeholder="5521986829331"
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Segurança -->
+    <div class="card settings-section">
+      <div class="settings-section-header">
+        <div class="settings-icon settings-icon-orange">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div>
+          <h2>Alterar Senha do Admin</h2>
+          <p class="text-muted text-small">Deixe em branco para manter a senha atual.</p>
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label" for="newPass">Nova Senha</label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              class="form-control"
+              id="newPass"
+              placeholder="Nova senha"
+              autocomplete="new-password"
+            >
+            <button type="button" class="btn-toggle-pass" onclick="togglePass('newPass', this)" tabindex="-1">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="confirmPass">Confirmar Senha</label>
+          <div class="input-password-wrap">
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPass"
+              placeholder="Confirme a nova senha"
+              autocomplete="new-password"
+            >
+            <button type="button" class="btn-toggle-pass" onclick="togglePass('confirmPass', this)" tabindex="-1">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão salvar -->
+    <div class="form-actions form-actions-end">
+      <button type="button" class="btn btn-primary btn-lg" onclick="saveConfig()">
+        <i class="fas fa-save"></i> Salvar Configurações
+      </button>
+    </div>
+
+  </main>
+</div>
+
+<script src="../js/dataService.js"></script>
+<script src="../js/admin.js"></script>
+<script>
+  requireAuth();
+
+  function togglePass(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+  }
+
+  function loadConfig() {
+    const config = DS.getConfig() || {};
+    document.getElementById('fbPixelId').value = config.fbPixelId || '';
+    document.getElementById('fbAccessToken').value = config.fbAccessToken || '';
+    document.getElementById('gtmId').value = config.gtmId || '';
+    document.getElementById('whatsapp').value = config.whatsapp || '';
+    // Never pre-fill password fields for security
+  }
+
+  function saveConfig() {
+    const newPass = document.getElementById('newPass').value;
+    const confirmPass = document.getElementById('confirmPass').value;
+
+    if (newPass || confirmPass) {
+      if (newPass.length < 6) {
+        showToast('A senha deve ter pelo menos 6 caracteres.', 'error');
+        return;
+      }
+      if (newPass !== confirmPass) {
+        showToast('As senhas não coincidem.', 'error');
+        document.getElementById('confirmPass').focus();
+        return;
+      }
+    }
+
+    const existing = DS.getConfig() || {};
+    const config = {
+      ...existing,
+      fbPixelId: document.getElementById('fbPixelId').value.trim(),
+      fbAccessToken: document.getElementById('fbAccessToken').value.trim(),
+      gtmId: document.getElementById('gtmId').value.trim(),
+      whatsapp: document.getElementById('whatsapp').value.trim(),
+    };
+
+    if (newPass) {
+      config.adminPassword = newPass;
+    }
+
+    DS.saveConfig(config);
+    showToast('Configurações salvas com sucesso!', 'success');
+
+    // Limpa campos de senha após salvar
+    document.getElementById('newPass').value = '';
+    document.getElementById('confirmPass').value = '';
+  }
+
+  loadConfig();
+</script>
+</body>
+</html>
