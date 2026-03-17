@@ -62,11 +62,7 @@
         ============================== -->
         <section class="hero">
             <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-            <div class="matrix-lance" aria-hidden="true">
-                <svg width="48" height="110" viewBox="0 0 44 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/>
-                </svg>
-            </div>
+
             <div class="container">
                 <div class="hero-tag">
                     <span class="hero-tag-dot"></span>
@@ -717,8 +713,7 @@
     // ── Matrix Lance Animation ──────────────────────────────────────
     (function () {
         const canvas  = document.getElementById('matrix-canvas');
-        const lance   = document.querySelector('.matrix-lance');
-        if (!canvas || !lance) return;
+        if (!canvas) return;
 
         const ctx      = canvas.getContext('2d');
         const charPool = '01{}[]<>//#;:=()=>constletvarfunctionimportexportclassasyncawaittruefalsereturnnullundefined'.split('');
@@ -767,10 +762,9 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Fase reveal: diminui opacidade do canvas e sobe a lança
+            // Fase reveal: fade out do canvas após a chuva
             if (phase === 'rain' && elapsed >= RAIN_DURATION) {
                 phase = 'reveal';
-                lance.classList.add('visible');
 
                 // Fade out canvas gradualmente
                 const fadOut = setInterval(() => {
