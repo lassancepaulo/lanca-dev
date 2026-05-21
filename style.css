@@ -775,6 +775,18 @@ a { text-decoration: none; color: inherit; }
     background: linear-gradient(150deg, #0a2618 0%, #145e36 60%, #229660 100%);
 }
 
+.mockup-gimboo .browser-content {
+    background: linear-gradient(150deg, #1a0a00 0%, #7a2800 60%, #e05000 100%);
+}
+
+.mockup-ajudanalista .browser-content {
+    background: linear-gradient(150deg, #0d0a1f 0%, #2d1a6e 60%, #5b35c2 100%);
+}
+
+.mockup-nomeai .browser-content {
+    background: linear-gradient(150deg, #001a1a 0%, #006060 60%, #00b3a4 100%);
+}
+
 .portfolio-info { padding: 22px 24px; }
 
 .portfolio-tag {
@@ -828,6 +840,18 @@ a { text-decoration: none; color: inherit; }
     padding: 4px 10px;
     border-radius: 6px;
 }
+
+.portfolio-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.portfolio-link:hover { opacity: 0.75; }
 
 /* ===========================
    TESTIMONIALS
