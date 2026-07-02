@@ -787,6 +787,10 @@ a { text-decoration: none; color: inherit; }
     background: linear-gradient(150deg, #001a1a 0%, #006060 60%, #00b3a4 100%);
 }
 
+.mockup-makeup .browser-content {
+    background: linear-gradient(150deg, #1a0010 0%, #7a1048 60%, #d4578a 100%);
+}
+
 .portfolio-info { padding: 22px 24px; }
 
 .portfolio-tag {
