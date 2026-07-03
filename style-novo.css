@@ -1,0 +1,171 @@
+/* ================================
+   LANÇA.DEV — NOVA IDENTIDADE VISUAL
+   Arquivo de prévia (não vai para produção)
+================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap');
+
+/* ---- Variáveis: roxo + amarelo ---- */
+:root {
+    --accent:        #7B61FF;
+    --accent-hover:  #6A52E0;
+    --accent-glow:   rgba(123, 97, 255, 0.25);
+    --accent-2:      #FFD23F;
+    --bg:            #0D0A1F;
+    --surface:       #100E1E;
+    --surface-2:     #171428;
+    --surface-3:     #1E1B32;
+    --border:        #211E38;
+    --border-light:  #2C2848;
+}
+
+/* ---- Tipografia: Nunito para headings ---- */
+.hero-title,
+.hero-accent,
+h2, h3,
+.logo,
+.stat-number {
+    font-family: 'Nunito', sans-serif;
+}
+
+.logo {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+/* ---- Hero glow: roxo ---- */
+.hero {
+    background: radial-gradient(circle, rgba(123,97,255,0.08) 0%, transparent 60%);
+}
+
+/* ---- Hero tag ---- */
+.hero-tag {
+    background: rgba(123,97,255,0.10);
+    border: 1px solid rgba(123,97,255,0.25);
+}
+.hero-tag-dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(123,97,255,0.6);
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(123,97,255,0.6); }
+    50%       { box-shadow: 0 0 0 6px rgba(123,97,255,0); }
+}
+
+/* ---- Serviços: featured card ---- */
+.service-card:hover {
+    border-color: rgba(123,97,255,0.4);
+}
+.service-card.service-featured {
+    border-color: rgba(123,97,255,0.35);
+    background: linear-gradient(135deg, rgba(123,97,255,0.06), var(--surface));
+}
+.service-badge {
+    background: rgba(255,210,63,0.12);
+    border: 1px solid rgba(255,210,63,0.25);
+    color: var(--accent-2);
+}
+
+/* ---- Diferenciais ---- */
+.diferencial-icon {
+    background: rgba(123,97,255,0.08);
+    border: 1px solid rgba(123,97,255,0.15);
+    color: var(--accent);
+}
+
+/* ---- Portfólio ---- */
+.portfolio-card:hover {
+    border-color: rgba(123,97,255,0.35);
+}
+.portfolio-tag {
+    background: rgba(123,97,255,0.08);
+    border: 1px solid rgba(123,97,255,0.20);
+    color: var(--accent);
+}
+
+/* ---- Depoimentos ---- */
+.testimonial-card:hover {
+    border-color: rgba(123,97,255,0.22);
+}
+.stars { color: var(--accent-2); }
+
+/* ---- FAQ ---- */
+.faq-item.active {
+    border-color: rgba(123,97,255,0.25);
+}
+.faq-item.active .faq-icon {
+    color: var(--accent);
+}
+
+/* ---- CTA section glow ---- */
+.cta-section {
+    background: radial-gradient(ellipse, rgba(123,97,255,0.09) 0%, transparent 65%);
+}
+
+/* ---- Input focus ---- */
+.lead-form input:focus,
+.lead-form select:focus {
+    border-color: var(--accent);
+}
+
+/* ---- Botões primários: amarelo com texto escuro (alto contraste) ---- */
+.btn-primary {
+    background: var(--accent-2);
+    color: #1A1530;
+}
+.btn-primary:hover {
+    background: #F0C435;
+    color: #1A1530;
+}
+
+/* ---- Btn glow ---- */
+.btn-glow {
+    box-shadow: 0 4px 24px rgba(255,210,63,0.35);
+}
+.btn-glow:hover {
+    box-shadow: 0 6px 32px rgba(255,210,63,0.55);
+}
+
+/* ---- Mobile CTA bar ---- */
+.mobile-cta-bar { background: var(--accent-2); }
+.mobile-cta-bar .btn-primary { background: #1A1530; color: #fff; }
+
+/* ---- Exit intent ---- */
+.exit-overlay .exit-box {
+    border-color: rgba(123,97,255,0.25);
+    box-shadow: 0 0 80px rgba(123,97,255,0.20), 0 24px 60px rgba(0,0,0,0.6);
+}
+
+/* ---- Social proof toast ---- */
+.social-proof-toast {
+    background: rgba(123,97,255,0.10);
+    border: 1px solid rgba(123,97,255,0.20);
+}
+
+/* ---- Chat bubble ---- */
+.chat-bubble-btn {
+    background: var(--accent) !important;
+    box-shadow: 0 4px 20px rgba(123,97,255,0.50) !important;
+}
+
+/* ---- Urgency bar ---- */
+.urgency-bar {
+    background: linear-gradient(90deg, var(--accent), #9B85FF);
+}
+.urgency-bar strong {
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+/* ---- Logo real: usa o PNG da identidade ---- */
+.logo-img {
+    height: 28px;
+    width: auto;
+    display: block;
+}
+
+.logo {
+    padding: 0;
+    font-size: 0;
+    letter-spacing: 0;
+}
