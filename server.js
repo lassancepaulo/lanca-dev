@@ -11,8 +11,9 @@ const crypto = require('crypto');
 
 const PORT         = process.env.PORT || 3030;
 const DATA_DIR     = process.env.DATA_DIR || path.join(__dirname, 'data');
-const LEADS_FILE   = path.join(DATA_DIR, 'leads.json');
-const ROOT         = path.resolve(__dirname);
+const LEADS_FILE       = path.join(DATA_DIR, 'leads.json');
+const GUIA_LEADS_FILE  = path.join(DATA_DIR, 'guia-leads.json');
+const ROOT             = path.resolve(__dirname);
 
 // ── Admin key — sem padrão ────────────────────────────
 const ADMIN_KEY_ENV = process.env.ADMIN_KEY || null;
@@ -23,6 +24,7 @@ if (!ADMIN_KEY_ENV) {
 // ── Garante que data/ existe ──────────────────────────
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(LEADS_FILE)) fs.writeFileSync(LEADS_FILE, '[]', 'utf8');
+if (!fs.existsSync(GUIA_LEADS_FILE)) fs.writeFileSync(GUIA_LEADS_FILE, '[]', 'utf8');
 
 // ── MIME types ────────────────────────────────────────
 const MIME = {
@@ -38,10 +40,11 @@ const MIME = {
   '.woff': 'font/woff',
   '.woff2':'font/woff2',
   '.pdf':  'application/pdf',
+  '.webp': 'image/webp',
 };
 
 // Extensões permitidas para arquivos estáticos
-const ALLOWED_EXTENSIONS = new Set(Object.keys(MIME));
+const ALLOWED_EXTENSIONS = new Set([...Object.keys(MIME), '.webp']);
 
 // Prefixos/arquivos bloqueados (relativos ao ROOT)
 const BLOCKED = [
@@ -145,6 +148,73 @@ function generateLeadId(leads) {
   const year = new Date().getFullYear();
   const num  = String(leads.length + 1).padStart(3, '0');
   return `LEAD-${year}-${num}`;
+}
+
+// ── Helpers guia-leads ────────────────────────────────
+function readGuiaLeads() {
+  try { return JSON.parse(fs.readFileSync(GUIA_LEADS_FILE, 'utf8')); }
+  catch { return []; }
+}
+
+let writeGuiaQueue = Promise.resolve();
+function writeGuiaLeads(leads) {
+  writeGuiaQueue = writeGuiaQueue.then(() => new Promise((resolve, reject) => {
+    const tmp = GUIA_LEADS_FILE + '.tmp';
+    fs.writeFile(tmp, JSON.stringify(leads, null, 2), 'utf8', err => {
+      if (err) { console.error('[WRITE GUIA]', err); return reject(err); }
+      fs.rename(tmp, GUIA_LEADS_FILE, err2 => {
+        if (err2) { console.error('[RENAME GUIA]', err2); return reject(err2); }
+        resolve();
+      });
+    });
+  }));
+  return writeGuiaQueue;
+}
+
+function generateGuiaId(leads) {
+  const year = new Date().getFullYear();
+  // ID sequencial independente do tamanho (usa o maior número já existente)
+  let max = 0;
+  for (const l of leads) {
+    const m = l.id && l.id.match(/^GUIA-\d{4}-(\d+)$/);
+    if (m) max = Math.max(max, parseInt(m[1], 10));
+  }
+  return `GUIA-${year}-${String(max + 1).padStart(3, '0')}`;
+}
+
+function hashIP(ip) {
+  // Hash com sal fixo — identifica padrões sem guardar IP bruto
+  return crypto.createHash('sha256').update('lanca.dev:' + ip).digest('hex').slice(0, 16);
+}
+
+// Validação do body do guia
+const STR_UTM = (v) => typeof v === 'string' && v.length <= 200;
+
+function validateGuiaBody(body) {
+  if (!body) return 'Corpo inválido';
+  const { nome, email, whatsapp, consentimento, consentimento_texto, origem_utm, referrer, pagina } = body;
+  if (!nome || typeof nome !== 'string' || nome.trim().replace(/[^A-Za-zÀ-ÿ]/g, '').length < 2 || nome.length > 120)
+    return 'Nome inválido';
+  if (!email || !EMAIL_RE.test(email) || email.length > 254)
+    return 'E-mail inválido';
+  if (!whatsapp || typeof whatsapp !== 'string' || !/^55\d{10,11}$/.test(whatsapp))
+    return 'WhatsApp inválido (formato: 55DDD9XXXXXXXX)';
+  if (consentimento !== true)
+    return 'Consentimento obrigatório';
+  if (consentimento_texto && (typeof consentimento_texto !== 'string' || consentimento_texto.length > 1000))
+    return 'consentimento_texto muito longo';
+  if (origem_utm !== undefined) {
+    if (typeof origem_utm !== 'object' || origem_utm === null) return 'origem_utm inválido';
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    for (const k of utmKeys) {
+      if (origem_utm[k] !== undefined && !STR_UTM(origem_utm[k])) return `origem_utm.${k} inválido`;
+    }
+  }
+  if (referrer !== undefined && (typeof referrer !== 'string' || referrer.length > 500))
+    return 'referrer inválido';
+  if (pagina !== undefined && (typeof pagina !== 'string' || pagina.length > 300))
+    return 'pagina inválida';
+  return null;
 }
 
 // ── parseBody com limite de tamanho ───────────────────
@@ -357,6 +427,104 @@ const server = http.createServer(async (req, res) => {
     return sendJSON(res, 200, { ok: true });
   }
 
+  // ── API: POST /api/guia (formulário público) ─────────
+  if (pathname === '/api/guia' && method === 'POST') {
+    const ip = getClientIP(req);
+    if (!checkRateLimit(ip)) {
+      return sendJSON(res, 429, { error: 'Muitas requisições. Tente novamente em breve.' });
+    }
+
+    let body;
+    try { body = await parseBody(req); }
+    catch (err) {
+      if (err.code === 'PAYLOAD_TOO_LARGE')
+        return sendJSON(res, 413, { error: 'Corpo da requisição muito grande' });
+      return sendJSON(res, 400, { error: 'Requisição inválida' });
+    }
+
+    const err = validateGuiaBody(body);
+    if (err) return sendJSON(res, 400, { error: err });
+
+    const leads = readGuiaLeads();
+    const emailNorm = body.email.trim().toLowerCase();
+    const existing  = leads.findIndex(l => l.email === emailNorm && l.whatsapp === body.whatsapp);
+
+    if (existing !== -1) {
+      // Atualiza último contato em vez de duplicar
+      leads[existing].ultimoContato = new Date().toISOString();
+      leads[existing].pagina        = body.pagina || leads[existing].pagina;
+      await writeGuiaLeads(leads);
+      console.log(`[GUIA] atualizado ${leads[existing].id}`);
+      return sendJSON(res, 201, { ok: true, id: leads[existing].id });
+    }
+
+    const lead = {
+      id:                 generateGuiaId(leads),
+      nome:               body.nome.trim(),
+      email:              emailNorm,
+      whatsapp:           body.whatsapp,
+      consentimento:      true,
+      consentimento_texto:(body.consentimento_texto || '').slice(0, 1000),
+      origem_utm:         body.origem_utm || {},
+      referrer:           (body.referrer || '').slice(0, 500),
+      pagina:             (body.pagina   || '').slice(0, 300),
+      ipHash:             hashIP(ip),
+      qualificacao:       null,
+      criadoEm:           new Date().toISOString(),
+      ultimoContato:      new Date().toISOString(),
+    };
+    leads.push(lead);
+    await writeGuiaLeads(leads);
+    console.log(`[GUIA] ${lead.id} — ${lead.nome}`);
+    return sendJSON(res, 201, { ok: true });
+  }
+
+  // ── API: POST /api/guia/qualificacao ─────────────────
+  if (pathname === '/api/guia/qualificacao' && method === 'POST') {
+    let body;
+    try { body = await parseBody(req); }
+    catch { return sendJSON(res, 400, { error: 'Requisição inválida' }); }
+    if (!body) return sendJSON(res, 400, { error: 'JSON inválido' });
+
+    const { email, whatsapp, tipo_negocio, faturamento_mensal, maior_dor } = body;
+    if (!email || !whatsapp) return sendJSON(res, 400, { error: 'email e whatsapp obrigatórios' });
+
+    const leads = readGuiaLeads();
+    const idx   = leads.findIndex(l => l.email === email.toLowerCase() && l.whatsapp === whatsapp);
+    if (idx === -1) {
+      // Lead não encontrado — não cria, só avisa sem revelar dados
+      return sendJSON(res, 200, { ok: true });
+    }
+
+    leads[idx].qualificacao = {
+      tipo_negocio:      typeof tipo_negocio    === 'string' ? tipo_negocio.slice(0, 100)    : null,
+      faturamento_mensal:typeof faturamento_mensal==='string'? faturamento_mensal.slice(0,50): null,
+      maior_dor:         typeof maior_dor        === 'string' ? maior_dor.slice(0, 300)       : null,
+      respondidoEm:      new Date().toISOString(),
+    };
+    leads[idx].ultimoContato = new Date().toISOString();
+    await writeGuiaLeads(leads);
+    return sendJSON(res, 200, { ok: true });
+  }
+
+  // ── API: GET /api/guia (admin) ────────────────────────
+  if (pathname === '/api/guia' && method === 'GET') {
+    if (!ADMIN_KEY_ENV) return adminUnavailable(res);
+    if (!isAdminAuth(req)) return sendJSON(res, 401, { error: 'Unauthorized' });
+    return sendJSON(res, 200, readGuiaLeads());
+  }
+
+  // ── API: DELETE /api/guia/:id ─────────────────────────
+  if (pathname.startsWith('/api/guia/') && method === 'DELETE') {
+    if (!ADMIN_KEY_ENV) return adminUnavailable(res);
+    if (!isAdminAuth(req)) return sendJSON(res, 401, { error: 'Unauthorized' });
+    const id = pathname.replace('/api/guia/', '');
+    if (!id || id.includes('/') || id === 'qualificacao') return sendJSON(res, 400, { error: 'ID inválido' });
+    const leads = readGuiaLeads().filter(l => l.id !== id);
+    await writeGuiaLeads(leads);
+    return sendJSON(res, 200, { ok: true });
+  }
+
   // ── API: POST /api/pixel (requer admin) ──────────────
   if (pathname === '/api/pixel' && method === 'POST') {
     if (!ADMIN_KEY_ENV) return adminUnavailable(res);
@@ -406,10 +574,19 @@ const server = http.createServer(async (req, res) => {
   // ── Arquivos estáticos ────────────────────────────────
   let staticPath = pathname;
 
-  // Raiz → index.html
-  if (staticPath === '/') staticPath = '/index.html';
+  // /guia (sem barra) → 301 /guia/
+  if (staticPath === '/guia') {
+    addSecurityHeaders(res);
+    res.writeHead(301, { 'Location': '/guia/' });
+    return res.end();
+  }
 
-  // Sem extensão → tenta .html
+  // Raiz e diretórios com barra final → index.html
+  if (staticPath === '/' || staticPath.endsWith('/')) {
+    staticPath = staticPath + 'index.html';
+  }
+
+  // /guia/obrigado ou /guia/privacidade (sem .html) → tenta .html
   if (!path.extname(staticPath)) {
     const withHtml = path.resolve(ROOT, '.' + staticPath + '.html');
     if (withHtml.startsWith(ROOT + path.sep) && fs.existsSync(withHtml)) {
