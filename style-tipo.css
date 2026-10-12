@@ -1,0 +1,540 @@
+/* ============================================================
+   LANÇA.DEV — UPDATE DE DESIGN (referência: /guia)
+   Neo-brutalist: cantos retos, bordas sólidas, sombras offset
+   ============================================================ */
+
+/* ── FONTES SELF-HOSTED (mesmos woff2 da LP) ─────────────── */
+@font-face {
+  font-family: "Inter";
+  font-weight: 600;
+  font-display: swap;
+  src: url("guia/assets/fonts/inter-600-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 800;
+  font-display: swap;
+  src: url("guia/assets/fonts/inter-800-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: 700;
+  font-display: swap;
+  src: url("guia/assets/fonts/jetbrains-mono-700-latin.woff2") format("woff2");
+}
+
+/* ── TOKENS ADICIONAIS ───────────────────────────────────── */
+:root {
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --deep: #24205a;
+  --magenta: #ff2fb3;
+  --cyan: #22d3ee;
+  --mute: #b4aed4;
+}
+
+/* ── CORPO ───────────────────────────────────────────────── */
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+/* ── HEADINGS: Inter 800 uppercase tight ─────────────────── */
+h1, h2, h3,
+.hero-title, .hero-accent, .stat-number {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero-title, .hero-accent {
+  font-size: clamp(30px, 7vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: clamp(22px, 5vw, 34px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-size: clamp(17px, 3.5vw, 21px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+/* ── LOGO / NAV: Inter 800 (sem Syne/Nunito) ─────────────── */
+.logo {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.nav-links a, .mobile-link {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ── JETBRAINS MONO: labels, tags, stats, badges ────────── */
+.hero-tag,
+.stat-label, .stat-unit,
+.service-badge, .service-prazo,
+.diferencial-number,
+.portfolio-tag,
+.section-tag,
+.section-label,
+.testimonial-role,
+.hero-trust span,
+.step-number {
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ── HERO TAG: borda ciano clip-path como na LP ──────────── */
+.hero-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 2px solid var(--cyan);
+  color: var(--cyan);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: transparent;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  border-radius: 0;
+}
+.hero-tag-dot { background: var(--cyan); }
+
+/* ── BOTÕES: cantos retos, sombra offset magenta ────────── */
+.btn {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary {
+  box-shadow: 4px 4px 0 var(--magenta);
+}
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--magenta);
+}
+.btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--magenta);
+}
+
+.btn-glow,
+.btn-glow:hover {
+  box-shadow: 4px 4px 0 var(--magenta);
+}
+.btn-glow:hover {
+  box-shadow: 6px 6px 0 var(--magenta);
+}
+
+.btn-ghost {
+  border-radius: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.btn-ghost:hover {
+  border-color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.04);
+}
+
+.btn-lg { border-radius: 0; }
+
+/* ── CARDS: cantos retos, borda sólida, sombra offset ───── */
+.service-card,
+.portfolio-card,
+.testimonial-card,
+.diferencial-card,
+.faq-item,
+.step-card,
+.exit-box {
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 var(--deep);
+}
+
+.service-card {
+  border: 2px solid rgba(123,97,255,0.35);
+}
+.service-card:hover {
+  border-color: rgba(123,97,255,0.7);
+  box-shadow: 6px 6px 0 var(--deep);
+  transform: translate(-2px,-2px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.service-card.service-featured {
+  border: 4px solid var(--accent);
+  box-shadow: 6px 6px 0 var(--deep);
+}
+.service-card.service-featured:hover {
+  box-shadow: 8px 8px 0 var(--deep);
+}
+
+/* ── STATS: borda sólida, sem radius ────────────────────── */
+.hero-stats {
+  border-radius: 0;
+  border: 2px solid rgba(123,97,255,0.35);
+  background: rgba(20,17,48,0.6);
+}
+
+/* ── FORMULÁRIO LEAD: borda sólida purple, sem radius ───── */
+.lead-form input,
+.lead-form select,
+.lead-form textarea {
+  border-radius: 0;
+  border: 2px solid #7566d6;
+  background: #0d0b1a;
+}
+.lead-form input:focus,
+.lead-form select:focus,
+.lead-form textarea:focus {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 1px;
+  border-color: var(--accent-2);
+}
+
+/* ── PORTFOLIO CARD: imagem com borda e sombra offset ────── */
+.portfolio-card {
+  border: 2px solid rgba(123,97,255,0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.portfolio-card:hover {
+  border-color: var(--accent-2);
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--accent-2);
+  background: rgba(255,210,63,0.06);
+}
+.portfolio-card img {
+  border-bottom: 2px solid rgba(123,97,255,0.3);
+}
+
+/* ── TESTIMONIALS: sem radius ───────────────────────────── */
+.testimonial-card {
+  border: 2px solid rgba(123,97,255,0.22);
+}
+.testimonial-card:hover {
+  border-color: rgba(123,97,255,0.5);
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--deep);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+/* ── FAQ: sem radius ─────────────────────────────────────── */
+.faq-item {
+  border: 2px solid rgba(123,97,255,0.18);
+  border-radius: 0;
+}
+.faq-item.active {
+  border-color: rgba(123,97,255,0.4);
+  box-shadow: 4px 4px 0 var(--deep);
+}
+
+/* ── NAV: borda inferior sólida (sem blur suave) ─────────── */
+.nav {
+  border-bottom: 2px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+/* ── HERO TRUST BADGES: mono uppercase ──────────────────── */
+.hero-trust {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  color: var(--mute);
+}
+
+/* ── SOCIAL PROOF TOAST: sem radius ─────────────────────── */
+.social-proof-toast {
+  border-radius: 0;
+  border: 2px solid rgba(123,97,255,0.3);
+  box-shadow: 4px 4px 0 var(--deep);
+}
+
+/* ── EXIT INTENT: sem radius ─────────────────────────────── */
+.exit-overlay .exit-box {
+  border-radius: 0;
+  border: 4px solid rgba(123,97,255,0.4);
+  box-shadow: 8px 8px 0 var(--deep);
+}
+
+/* ── MOBILE CTA BAR: sem radius ─────────────────────────── */
+.mobile-cta-bar .btn-primary {
+  border-radius: 0;
+}
+
+/* ── PREÇO: Inter 800 ────────────────────────────────────── */
+.service-price {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ────────────────────────────────────────────────────────────
+   PIXEL ART — referência ID visual
+   ──────────────────────────────────────────────────────────── */
+
+/* ── Oculta os dots velhos (mac-style) ───────────────────── */
+.dot { display: none !important; }
+
+/* ── Pixel window buttons (substitui dots) ───────────────── */
+.px-win-btns {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.px-win-btns span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  image-rendering: pixelated;
+}
+.px-win-btns span:nth-child(1) { background: var(--accent); }       /* roxo — minimize */
+.px-win-btns span:nth-child(2) { background: var(--accent-2); }     /* amarelo — maximize */
+.px-win-btns span:nth-child(3) { background: var(--magenta); }      /* magenta — close */
+
+/* ── Browser bar: ajustes para os novos botões ──────────── */
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.browser-url {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--mute);
+  letter-spacing: 0.02em;
+}
+
+/* ── SCANLINE OVERLAY: textura pixel art sutil no hero ───── */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(123, 97, 255, 0.025) 3px,
+    rgba(123, 97, 255, 0.025) 4px
+  );
+  z-index: 0;
+}
+
+/* ── Logo raio antes das section labels ─────────────────── */
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' shape-rendering='crispEdges'%3E%3Cg fill='%23ffd23f'%3E%3Crect x='5' y='1' width='3' height='1'/%3E%3Crect x='4' y='2' width='3' height='1'/%3E%3Crect x='3' y='3' width='3' height='1'/%3E%3Crect x='2' y='4' width='3' height='2'/%3E%3Crect x='3' y='6' width='3' height='1'/%3E%3Crect x='4' y='7' width='3' height='1'/%3E%3Crect x='5' y='8' width='3' height='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-right: 8px;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+/* ── TOAST ESTILO XP ─────────────────────────────────────── */
+.xp-notif {
+  padding: 0 !important;
+  overflow: hidden;
+  border: 2px solid var(--accent) !important;
+  box-shadow: 4px 4px 0 var(--deep) !important;
+  border-radius: 0 !important;
+  min-width: 240px;
+  cursor: default;
+}
+
+.xp-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: linear-gradient(90deg, var(--deep) 0%, #3d2fa0 100%);
+  border-bottom: 2px solid var(--accent);
+  user-select: none;
+}
+
+.xp-ico {
+  flex-shrink: 0;
+}
+
+.xp-appname {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.xp-x {
+  width: 16px;
+  height: 16px;
+  background: var(--magenta);
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+.xp-x:hover { background: #ff0090; }
+
+.xp-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+/* ── Avatar: quadrado pixel art (não círculo) ────────────── */
+.xp-notif .sp-avatar {
+  border-radius: 0 !important;
+  image-rendering: pixelated;
+  background: var(--deep) !important;
+  border: 2px solid var(--accent);
+  color: var(--accent-2);
+  font-family: var(--mono) !important;
+  font-size: 13px !important;
+  font-weight: 700;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+/* ── Tipografia do toast: Mono uppercase ─────────────────── */
+.xp-notif .sp-info strong {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+.xp-notif .sp-info span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--mute);
+}
+.xp-notif .sp-time {
+  color: var(--cyan) !important;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+/* ── Pixel art no card featured: canto decorativo ─────── */
+.service-card.service-featured::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-2);
+  image-rendering: pixelated;
+}
+
+/* ── Urgency bar: redesign minimal (sem caixa pesada) ───── */
+.urgency-bar {
+  background: transparent !important;
+  border: none !important;
+  border-left: 3px solid var(--accent-2) !important;
+  border-radius: 0 !important;
+  padding: 6px 0 6px 14px !important;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--mute) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: fit-content;
+  margin: 16px auto 0 !important;
+}
+.urgency-bar strong { color: var(--accent-2) !important; }
+.urgency-dot {
+  display: none;
+}
+.urgency-bar::before {
+  content: '◆';
+  font-size: 8px;
+  color: var(--accent-2);
+  flex-shrink: 0;
+}
+
+/* ── PIXEL TICKER: marquee horizontal ──────────────────── */
+.px-ticker {
+  overflow: hidden;
+  border-top: 2px solid rgba(123,97,255,0.2);
+  border-bottom: 2px solid rgba(123,97,255,0.2);
+  background: #0d0b1a;
+  padding: 10px 0;
+}
+
+.px-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: px-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.px-ticker-track span {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding: 0 18px;
+}
+
+.px-ticker-track .px-sep {
+  font-size: 7px;
+  color: var(--accent-2);
+  padding: 0;
+  image-rendering: pixelated;
+}
+
+@keyframes px-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .px-ticker-track { animation: none; }
+}
+
+/* ── Portfolio card: borda inferior amarela pixel ────────── */
+.portfolio-mockup {
+  border: 2px solid rgba(123,97,255,0.4);
+  border-bottom: none;
+}

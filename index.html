@@ -8,11 +8,9 @@
     <meta property="og:title" content="Lança.dev — Seu projeto no ar em dias">
     <meta property="og:description" content="Sites, sistemas, apps e agentes de IA entregues com velocidade. Do briefing ao ar sem enrolação.">
     <meta property="og:type" content="website">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style-novo.css">
+    <link rel="stylesheet" href="style-tipo.css">
 </head>
 <body>
 
@@ -352,9 +350,7 @@
                     <div class="portfolio-card">
                         <div class="portfolio-mockup mockup-travel">
                             <div class="browser-bar">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
+                                <div class="px-win-btns" aria-hidden="true"><span></span><span></span><span></span></div>
                                 <span class="browser-url">boralafora.com</span>
                             </div>
                             <div class="browser-content">
@@ -381,9 +377,7 @@
                     <div class="portfolio-card">
                         <div class="portfolio-mockup mockup-gimboo">
                             <div class="browser-bar">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
+                                <div class="px-win-btns" aria-hidden="true"><span></span><span></span><span></span></div>
                                 <span class="browser-url">gimboo.com.br</span>
                             </div>
                             <div class="browser-content">
@@ -411,9 +405,7 @@
                     <div class="portfolio-card">
                         <div class="portfolio-mockup mockup-ajudanalista">
                             <div class="browser-bar">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
+                                <div class="px-win-btns" aria-hidden="true"><span></span><span></span><span></span></div>
                                 <span class="browser-url">ajudanalista.com.br</span>
                             </div>
                             <div class="browser-content">
@@ -441,9 +433,7 @@
                     <div class="portfolio-card">
                         <div class="portfolio-mockup mockup-nomeai">
                             <div class="browser-bar">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
+                                <div class="px-win-btns" aria-hidden="true"><span></span><span></span><span></span></div>
                                 <span class="browser-url">nomeai.com.br</span>
                             </div>
                             <div class="browser-content">
@@ -471,9 +461,7 @@
                     <div class="portfolio-card">
                         <div class="portfolio-mockup mockup-makeup">
                             <div class="browser-bar">
-                                <span class="dot dot-red"></span>
-                                <span class="dot dot-yellow"></span>
-                                <span class="dot dot-green"></span>
+                                <div class="px-win-btns" aria-hidden="true"><span></span><span></span><span></span></div>
                                 <span class="browser-url">makeupcamilasoares.com</span>
                             </div>
                             <div class="browser-content">
@@ -500,6 +488,34 @@
                 </div>
             </div>
         </section>
+
+        <!-- ==============================
+             TECH TICKER (pixel art marquee)
+        ============================== -->
+        <div class="px-ticker" aria-hidden="true">
+            <div class="px-ticker-track">
+                <span>NEXT.JS</span><span class="px-sep">◆</span>
+                <span>NODE.JS</span><span class="px-sep">◆</span>
+                <span>REACT</span><span class="px-sep">◆</span>
+                <span>TYPESCRIPT</span><span class="px-sep">◆</span>
+                <span>SUPABASE</span><span class="px-sep">◆</span>
+                <span>STRIPE</span><span class="px-sep">◆</span>
+                <span>PRISMA</span><span class="px-sep">◆</span>
+                <span>TAILWIND</span><span class="px-sep">◆</span>
+                <span>VERCEL</span><span class="px-sep">◆</span>
+                <span>RAILWAY</span><span class="px-sep">◆</span>
+                <span>NEXT.JS</span><span class="px-sep">◆</span>
+                <span>NODE.JS</span><span class="px-sep">◆</span>
+                <span>REACT</span><span class="px-sep">◆</span>
+                <span>TYPESCRIPT</span><span class="px-sep">◆</span>
+                <span>SUPABASE</span><span class="px-sep">◆</span>
+                <span>STRIPE</span><span class="px-sep">◆</span>
+                <span>PRISMA</span><span class="px-sep">◆</span>
+                <span>TAILWIND</span><span class="px-sep">◆</span>
+                <span>VERCEL</span><span class="px-sep">◆</span>
+                <span>RAILWAY</span><span class="px-sep">◆</span>
+            </div>
+        </div>
 
         <!-- ==============================
              TESTIMONIALS
@@ -753,13 +769,22 @@
         </div>
     </div>
 
-    <!-- ── Social Proof Toast ─────────────────── -->
-    <div id="spToast" class="sp-toast" style="display:none" onclick="this.style.display='none'">
-        <div class="sp-avatar" id="spAvatar">AN</div>
-        <div class="sp-info">
-            <strong id="spName">Ana N.</strong>
-            <span id="spMsg">pediu orçamento de Landing Page</span>
-            <span class="sp-time" id="spTime">há 4 min</span>
+    <!-- ── Social Proof Toast — estilo XP ───────── -->
+    <div id="spToast" class="sp-toast xp-notif" style="display:none">
+        <div class="xp-titlebar">
+            <svg class="xp-ico" viewBox="0 0 10 10" width="12" height="12" aria-hidden="true" shape-rendering="crispEdges">
+                <g fill="#ffd23f"><rect x="5" y="1" width="3" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="3" y="3" width="3" height="1"/><rect x="2" y="4" width="3" height="2"/><rect x="3" y="6" width="3" height="1"/><rect x="4" y="7" width="3" height="1"/><rect x="5" y="8" width="3" height="1"/></g>
+            </svg>
+            <span class="xp-appname">lança.dev</span>
+            <button class="xp-x" onclick="document.getElementById('spToast').style.display='none'" aria-label="Fechar">×</button>
+        </div>
+        <div class="xp-body" onclick="document.getElementById('spToast').style.display='none'">
+            <div class="sp-avatar" id="spAvatar">AN</div>
+            <div class="sp-info">
+                <strong id="spName">Ana N.</strong>
+                <span id="spMsg">pediu orçamento de Landing Page</span>
+                <span class="sp-time" id="spTime">há 4 min</span>
+            </div>
         </div>
     </div>
 
