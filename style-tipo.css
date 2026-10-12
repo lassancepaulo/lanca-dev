@@ -499,15 +499,17 @@ h3 {
 }
 
 .px-ticker-track {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0;
+  width: max-content;
   white-space: nowrap;
   animation: px-scroll 24s linear infinite;
   will-change: transform;
 }
 
 .px-ticker-track span {
+  display: inline-block;
+  flex-shrink: 0;
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 700;
@@ -518,6 +520,8 @@ h3 {
 }
 
 .px-ticker-track .px-sep {
+  display: inline-block;
+  flex-shrink: 0;
   font-size: 7px;
   color: var(--accent-2);
   padding: 0;
