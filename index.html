@@ -490,31 +490,10 @@
         </section>
 
         <!-- ==============================
-             TECH TICKER (pixel art marquee)
+             PIXEL ART SPACE SCENE
         ============================== -->
-        <div class="px-ticker" aria-hidden="true">
-            <div class="px-ticker-track">
-                <span>NEXT.JS</span><span class="px-sep">◆</span>
-                <span>NODE.JS</span><span class="px-sep">◆</span>
-                <span>REACT</span><span class="px-sep">◆</span>
-                <span>TYPESCRIPT</span><span class="px-sep">◆</span>
-                <span>SUPABASE</span><span class="px-sep">◆</span>
-                <span>STRIPE</span><span class="px-sep">◆</span>
-                <span>PRISMA</span><span class="px-sep">◆</span>
-                <span>TAILWIND</span><span class="px-sep">◆</span>
-                <span>VERCEL</span><span class="px-sep">◆</span>
-                <span>RAILWAY</span><span class="px-sep">◆</span>
-                <span>NEXT.JS</span><span class="px-sep">◆</span>
-                <span>NODE.JS</span><span class="px-sep">◆</span>
-                <span>REACT</span><span class="px-sep">◆</span>
-                <span>TYPESCRIPT</span><span class="px-sep">◆</span>
-                <span>SUPABASE</span><span class="px-sep">◆</span>
-                <span>STRIPE</span><span class="px-sep">◆</span>
-                <span>PRISMA</span><span class="px-sep">◆</span>
-                <span>TAILWIND</span><span class="px-sep">◆</span>
-                <span>VERCEL</span><span class="px-sep">◆</span>
-                <span>RAILWAY</span><span class="px-sep">◆</span>
-            </div>
+        <div class="px-space-wrap" aria-label="Nave pixel art navegando no espaço">
+            <canvas id="px-space"></canvas>
         </div>
 
         <!-- ==============================
@@ -1154,6 +1133,69 @@
         }
 
         animFrame = requestAnimationFrame(draw);
+    })();
+    </script>
+
+    <!-- ── Pixel Art Space Scene ────────────────── -->
+    <script>
+    (function(){
+      var c=document.getElementById('px-space');
+      if(!c||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+      var ctx=c.getContext('2d');
+      ctx.imageSmoothingEnabled=false;
+      var W=c.width=c.offsetWidth||800, H=c.height=90;
+
+      /* stars */
+      var stars=Array.from({length:70},function(){return{
+        x:Math.random()*W, y:Math.random()*H,
+        spd:0.2+Math.random()*1.1,
+        sz:Math.random()<0.2?2:1,
+        a:0.25+Math.random()*0.75
+      };});
+
+      /* ship pixel art — 12×8 logical px, facing → */
+      var COLS={1:'#7b61ff',2:'#ff2fb3',3:'#ffd23f',4:'#22d3ee'};
+      var SHIP=[
+        [0,0,0,0,1,1,1,0,0,0,0,0],
+        [0,0,0,1,1,1,1,1,1,0,0,0],
+        [0,2,1,1,1,1,1,1,1,1,2,0],
+        [3,1,1,4,4,1,1,1,1,1,1,1],
+        [3,1,1,4,4,1,1,1,1,1,1,1],
+        [0,2,1,1,1,1,1,1,1,1,2,0],
+        [0,0,0,1,1,1,1,1,1,0,0,0],
+        [0,0,0,0,1,1,1,0,0,0,0,0]
+      ];
+      var S=3, SW=12*S, SH=8*S;
+      var sx=-SW, t=0, frame=0;
+      var baseY=Math.round((H-SH)/2);
+
+      function loop(){
+        for(var i=0;i<stars.length;i++){stars[i].x-=stars[i].spd;if(stars[i].x<-2)stars[i].x=W+2;}
+        sx+=1.5; if(sx>W+SW)sx=-SW;
+        t+=0.04; frame++;
+        ctx.clearRect(0,0,W,H);
+        /* draw stars */
+        for(var i=0;i<stars.length;i++){
+          var s=stars[i];
+          ctx.globalAlpha=s.a;
+          ctx.fillStyle='#fff';
+          ctx.fillRect(~~s.x,~~s.y,s.sz,s.sz);
+        }
+        ctx.globalAlpha=1;
+        /* draw ship */
+        var sy=baseY+~~(Math.sin(t)*4);
+        var flame=(frame>>2)&1?'#ffd23f':'#ff2fb3';
+        for(var r=0;r<SHIP.length;r++){
+          for(var col=0;col<SHIP[r].length;col++){
+            var v=SHIP[r][col];
+            if(!v)continue;
+            ctx.fillStyle=v===3?flame:COLS[v];
+            ctx.fillRect(~~sx+col*S,sy+r*S,S,S);
+          }
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
     })();
     </script>
 </body>
