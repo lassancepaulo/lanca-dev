@@ -1122,13 +1122,17 @@
       var ctx=c.getContext('2d');
       ctx.imageSmoothingEnabled=false;
       var W=c.width=c.offsetWidth||800, H=c.height=90;
+
+      /* stars */
       var stars=Array.from({length:70},function(){return{
         x:Math.random()*W, y:Math.random()*H,
         spd:0.2+Math.random()*1.1,
         sz:Math.random()<0.2?2:1,
         a:0.25+Math.random()*0.75
       };});
-      var COLS={1:'#7b61ff',2:'#ff2fb3',3:'#ffd23f',4:'#22d3ee'};
+
+      /* ship (12×8, S=3, facing →) */
+      var SHIP_C={1:'#7b61ff',2:'#ff2fb3',3:'#ffd23f',4:'#22d3ee'};
       var SHIP=[
         [0,0,0,0,1,1,1,0,0,0,0,0],
         [0,0,0,1,1,1,1,1,1,0,0,0],
@@ -1139,14 +1143,86 @@
         [0,0,0,1,1,1,1,1,1,0,0,0],
         [0,0,0,0,1,1,1,0,0,0,0,0]
       ];
-      var S=3, SW=12*S, SH=8*S;
-      var sx=-SW, t=0, frame=0;
+      var S=3,SW=12*S,SH=8*S,sx=-SW,t=0,frame=0;
       var baseY=Math.round((H-SH)/2);
+
+      /* object templates: planetas + telescópio James Webb */
+      var TPLS={
+        rocky:{S:3,w:8,h:8,
+          cols:{1:'#4a3d7a',2:'#8b7ab8',3:'#24205a'},
+          grid:[
+            [0,1,1,1,1,1,1,0],
+            [1,1,2,2,1,1,1,1],
+            [1,1,2,1,1,1,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,1,1,1,1,3,1],
+            [1,1,1,1,1,3,3,1],
+            [1,1,1,1,1,1,1,1],
+            [0,1,1,1,1,1,1,0]]},
+        ring:{S:3,w:12,h:7,
+          cols:{1:'#7b61ff',2:'#b4aed4',4:'#22d3ee'},
+          grid:[
+            [0,0,0,4,4,4,4,4,4,0,0,0],
+            [0,0,4,4,1,1,1,1,4,4,0,0],
+            [0,4,4,1,1,2,1,1,1,4,4,0],
+            [4,4,4,1,1,1,1,1,1,4,4,4],
+            [0,0,0,1,1,1,1,1,1,0,0,0],
+            [0,0,0,0,1,1,1,1,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0]]},
+        gas:{S:3,w:8,h:8,
+          cols:{1:'#3d2f6b',2:'#ffd23f'},
+          grid:[
+            [0,0,1,1,1,1,0,0],
+            [0,1,1,2,2,1,1,0],
+            [1,1,2,2,2,2,1,1],
+            [1,1,1,1,1,1,1,1],
+            [1,1,2,2,2,2,1,1],
+            [1,1,1,1,1,1,1,1],
+            [0,1,1,2,2,1,1,0],
+            [0,0,1,1,1,1,0,0]]},
+        jwst:{S:2,w:22,h:9,
+          cols:{2:'#2d2260',3:'#ffd23f',4:'#22d3ee',5:'#6b6b8a'},
+          grid:[
+            [0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0],
+            [2,2,2,2,2,2,2,2,0,3,3,3,3,3,3,0,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2,0,3,3,3,3,3,3,0,2,2,2,2,2,2],
+            [2,2,2,2,2,2,2,2,0,3,3,3,3,3,3,0,2,2,2,2,2,2],
+            [0,0,0,0,0,0,0,4,4,4,4,4,4,4,4,4,4,0,0,0,0,0],
+            [0,0,0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0,0],
+            [0,0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0,0],
+            [0,0,0,0,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,0]]}
+      };
+
+      /* spawn system: objetos aparecem espaçados, criando antecipação */
+      var bgObjs=[];
+      var nextSpawn=Date.now()+5000;
+
+      function spawnObj(){
+        var roll=Math.random();
+        var type=roll<0.30?'rocky':roll<0.60?'ring':roll<0.85?'gas':'jwst';
+        var tpl=TPLS[type];
+        var pH=tpl.h*tpl.S;
+        var y=Math.round(6+Math.random()*(H-pH-12));
+        bgObjs.push({
+          grid:tpl.grid,cols:tpl.cols,S:tpl.S,
+          w:tpl.w,h:tpl.h,
+          x:W+tpl.w*tpl.S+4,
+          y:y,
+          spd:0.25+Math.random()*0.2
+        });
+        nextSpawn=Date.now()+12000+Math.random()*16000;
+      }
+
       function loop(){
+        if(Date.now()>=nextSpawn) spawnObj();
+
         for(var i=0;i<stars.length;i++){stars[i].x-=stars[i].spd;if(stars[i].x<-2)stars[i].x=W+2;}
         sx+=1.5; if(sx>W+SW)sx=-SW;
         t+=0.04; frame++;
         ctx.clearRect(0,0,W,H);
+
+        /* stars */
         for(var i=0;i<stars.length;i++){
           var s=stars[i];
           ctx.globalAlpha=s.a;
@@ -1154,13 +1230,33 @@
           ctx.fillRect(~~s.x,~~s.y,s.sz,s.sz);
         }
         ctx.globalAlpha=1;
+
+        /* planetas / jwst */
+        var alive=[];
+        for(var i=0;i<bgObjs.length;i++){
+          var o=bgObjs[i];
+          o.x-=o.spd;
+          if(o.x<-(o.w*o.S+10)) continue;
+          alive.push(o);
+          for(var r=0;r<o.grid.length;r++){
+            for(var col=0;col<o.grid[r].length;col++){
+              var v=o.grid[r][col];
+              if(!v) continue;
+              ctx.fillStyle=o.cols[v];
+              ctx.fillRect(~~o.x+col*o.S,o.y+r*o.S,o.S,o.S);
+            }
+          }
+        }
+        bgObjs=alive;
+
+        /* ship */
         var sy=baseY+~~(Math.sin(t)*4);
         var flame=(frame>>2)&1?'#ffd23f':'#ff2fb3';
         for(var r=0;r<SHIP.length;r++){
           for(var col=0;col<SHIP[r].length;col++){
             var v=SHIP[r][col];
-            if(!v)continue;
-            ctx.fillStyle=v===3?flame:COLS[v];
+            if(!v) continue;
+            ctx.fillStyle=v===3?flame:SHIP_C[v];
             ctx.fillRect(~~sx+col*S,sy+r*S,S,S);
           }
         }
