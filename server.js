@@ -41,6 +41,8 @@ const MIME = {
   '.woff2':'font/woff2',
   '.pdf':  'application/pdf',
   '.webp': 'image/webp',
+  '.txt':  'text/plain; charset=utf-8',
+  '.xml':  'application/xml; charset=utf-8',
 };
 
 // Extensões permitidas para arquivos estáticos
