@@ -576,11 +576,14 @@ const server = http.createServer(async (req, res) => {
   // ── Arquivos estáticos ────────────────────────────────
   let staticPath = pathname;
 
-  // /guia (sem barra) → 301 /guia/
-  if (staticPath === '/guia') {
-    addSecurityHeaders(res);
-    res.writeHead(301, { 'Location': '/guia/' });
-    return res.end();
+  // Diretório sem barra final → 301 com barra
+  if (!path.extname(staticPath) && !staticPath.endsWith('/')) {
+    const dirIndex = path.resolve(ROOT, '.' + staticPath, 'index.html');
+    if (dirIndex.startsWith(ROOT + path.sep) && fs.existsSync(dirIndex)) {
+      addSecurityHeaders(res);
+      res.writeHead(301, { 'Location': staticPath + '/' });
+      return res.end();
+    }
   }
 
   // Raiz e diretórios com barra final → index.html

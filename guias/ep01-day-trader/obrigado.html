@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pronto! Seu guia está aqui | lança.dev</title>
+<meta name="description" content="Baixe o guia EP01 — Instale o robô de day trade no Claude Code.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0b1a">
+<link rel="icon" type="image/svg+xml" href="/guia/assets/favicon.svg">
+<link rel="stylesheet" href="/guia/assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<header class="top"><div class="wrap"><a class="brand" href="/" aria-label="lança.dev, página inicial"><svg viewBox="0 0 10 10" aria-hidden="true" shape-rendering="crispEdges"><g fill="#ffd23f"><rect x="5" y="1" width="3" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="3" y="3" width="3" height="1"/><rect x="2" y="4" width="3" height="2"/><rect x="3" y="6" width="3" height="1"/><rect x="4" y="7" width="3" height="1"/><rect x="5" y="8" width="3" height="1"/></g></svg><span>lança.dev</span></a></div></header>
+<main id="main" class="wrap"><div class="narrow" style="padding:18px 0 30px">
+<span class="tag">EP 01 — SÉRIE TESTEI NA PRÁTICA</span>
+<h1 class="rise">Pronto! Seu guia está aqui</h1>
+<p class="lead ok" id="hello" aria-live="polite"></p>
+<div class="stack">
+<a class="btn" id="pdf-btn" href="assets/ep01-guia.pdf" download>Baixar o PDF</a>
+</div>
+<p class="lead">Siga o guia na ordem: instale o Claude Code, clone o repositório e configure o ambiente Python. Deu algum erro? Me chama no Instagram que resolvo com você.</p>
+<div class="stack"><a class="btn alt" href="https://ig.me/m/lanca.dev" rel="noopener">Falar com o Paulo</a></div>
+<section class="card" style="margin-top:34px" aria-labelledby="qual">
+<h2 id="qual">Me conta mais sobre você</h2>
+<p class="sub">Opcional, leva 30 segundos. Me ajuda a criar conteúdo mais útil pra você.</p>
+<form id="qual-form" novalidate>
+<div class="field"><label class="lb" for="tipo">Seu objetivo com day trade</label>
+<select id="tipo" name="tipo"><option value="">Prefiro não dizer</option><option value="iniciante_aprendendo">Estou aprendendo, ainda não opero</option><option value="opera_manualmente">Já opero manualmente, quero automatizar</option><option value="tem_estrategia">Tenho estratégia, quero backtest</option><option value="desenvolvedor">Sou dev, quero integrar com IA</option><option value="curiosidade">Curiosidade sobre IA + finanças</option></select></div>
+<div class="field"><label class="lb" for="faturamento">Experiência com programação</label>
+<select id="faturamento" name="faturamento"><option value="">Prefiro não dizer</option><option value="zero">Nunca programei</option><option value="basico">Básico (HTML, scripts simples)</option><option value="intermediario">Intermediário (Python, JS)</option><option value="avancado">Avançado / profissional</option></select></div>
+<div class="field"><label class="lb" for="dor">O que você quer aprender depois do EP01?</label>
+<textarea id="dor" name="dor" maxlength="300" rows="3" placeholder="Ex.: quero aprender a criar minha própria estratégia de entrada"></textarea></div>
+<button type="submit" class="btn" id="qual-btn">Enviar</button>
+<p class="formerr" id="qual-error" role="alert"></p>
+</form>
+<p id="qual-ok" class="ok" tabindex="-1" hidden>Recebido! Vou usar isso pra decidir o próximo EP da série.</p>
+</section>
+</div></main>
+<footer><div class="wrap">lança.dev · série Testei na Prática · <a href="https://instagram.com/lanca.dev" rel="noopener">@lanca.dev</a><br><a href="/guia/privacidade.html">Política de privacidade</a></div></footer>
+<script src="config.js"></script>
+<script src="/guia/assets/lp.js"></script>
+</body>
+</html>
