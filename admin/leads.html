@@ -1,35 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leads / CRM — lança.dev Admin</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/admin.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leads — lança.dev Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>
-
 <div class="admin-layout">
 
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <svg width="14" height="32" viewBox="0 0 44 100" fill="none"><path d="M22 2 L34 72 L22 82 L10 72 Z" fill="#FF4D00"/></svg>
+      <svg viewBox="0 0 10 10" width="20" height="20" aria-hidden="true" shape-rendering="crispEdges">
+        <g fill="#ffd23f">
+          <rect x="5" y="1" width="3" height="1"/><rect x="4" y="2" width="3" height="1"/>
+          <rect x="3" y="3" width="3" height="1"/><rect x="2" y="4" width="3" height="2"/>
+          <rect x="3" y="6" width="3" height="1"/><rect x="4" y="7" width="3" height="1"/>
+          <rect x="5" y="8" width="3" height="1"/>
+        </g>
+      </svg>
       <div class="sidebar-logo-text">lança<span>.dev</span></div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section">Principal</div>
-      <a href="index.html"><i class="fas fa-chart-bar"></i> Dashboard</a>
-      <a href="leads.html" class="active"><i class="fas fa-users"></i> Leads / CRM</a>
-      <a href="orcamentos.html"><i class="fas fa-file-invoice-dollar"></i> Orçamentos</a>
+      <a href="index.html"><i class="fas fa-chart-bar"></i> <span>Dashboard</span></a>
+      <a href="leads.html" class="active"><i class="fas fa-users"></i> <span>Leads</span></a>
+      <a href="orcamentos.html"><i class="fas fa-file-invoice-dollar"></i> <span>Orçamentos</span></a>
       <div class="nav-section">Sistema</div>
-      <a href="configuracoes.html"><i class="fas fa-cog"></i> Configurações</a>
-      <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver site</a>
+      <a href="configuracoes.html"><i class="fas fa-cog"></i> <span>Configurações</span></a>
+      <a href="../index.html" target="_blank"><i class="fas fa-external-link-alt"></i> <span>Ver site</span></a>
     </nav>
     <div class="sidebar-footer">
-      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a>
     </div>
   </aside>
 
@@ -37,82 +42,106 @@
 
     <div class="page-header">
       <div class="page-header-info">
-        <h1>Leads / CRM</h1>
-        <p>Gerenciamento de contatos e oportunidades</p>
+        <h1>Leads</h1>
+        <p>Contatos do site + downloads dos guias</p>
       </div>
       <div class="page-header-actions">
-        <button class="btn btn-outline" onclick="exportCSV()">
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">
           <i class="fas fa-download"></i> Exportar CSV
         </button>
       </div>
     </div>
 
-    <div class="filter-bar">
-      <input
-        type="text"
-        id="searchInput"
-        class="form-control"
-        placeholder="Buscar por nome, e-mail ou telefone..."
-      >
-      <select id="filterStatus" class="form-control">
-        <option value="">Todos os status</option>
-        <option value="novo">Novo</option>
-        <option value="em_contato">Em contato</option>
-        <option value="proposta">Proposta enviada</option>
-        <option value="fechado">Fechado</option>
-        <option value="perdido">Perdido</option>
-      </select>
-      <select id="filterOrigem" class="form-control">
-        <option value="">Todas as origens</option>
-        <option value="site">Site</option>
-        <option value="instagram">Instagram</option>
-        <option value="whatsapp">WhatsApp</option>
-        <option value="indicacao">Indicação</option>
-        <option value="outros">Outros</option>
-      </select>
-      <select id="filterMes" class="form-control">
-        <option value="">Todos os meses</option>
-      </select>
+    <!-- Tabs -->
+    <div class="tabs" id="tabBar">
+      <button class="tab-btn active" onclick="switchTab('site', this)">
+        <i class="fas fa-globe"></i> Site <span id="countSite" style="margin-left:4px;opacity:0.6"></span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('guia', this)">
+        <i class="fas fa-file-arrow-down"></i> Guias / LPs <span id="countGuia" style="margin-left:4px;opacity:0.6"></span>
+      </button>
     </div>
 
-    <div class="card">
-      <div class="table-wrap">
-        <table class="table" id="leadsTable">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>WhatsApp</th>
-              <th>Projeto</th>
-              <th>Origem</th>
-              <th>Status</th>
-              <th>Data</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="leadsBody">
-            <tr>
-              <td colspan="7" class="text-center text-muted">Carregando leads...</td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Tab: Site Leads -->
+    <div class="tab-panel active" id="panel-site">
+      <div class="filter-bar" style="margin-bottom:16px">
+        <input type="text" id="searchSite" class="form-control" placeholder="Buscar nome, e-mail, telefone...">
+        <select id="filterStatus" class="form-control">
+          <option value="">Todos os status</option>
+          <option value="novo">Novo</option>
+          <option value="em_contato">Em contato</option>
+          <option value="proposta">Proposta enviada</option>
+          <option value="fechado">Fechado</option>
+          <option value="perdido">Perdido</option>
+        </select>
+        <select id="filterMes" class="form-control"></select>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table" id="siteTable">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>WhatsApp</th>
+                <th>Projeto</th>
+                <th>Status</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="siteBody">
+              <tr><td colspan="6" class="text-center text-muted" style="padding:24px"><i class="fas fa-spinner fa-spin"></i> Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Guia/LP Leads -->
+    <div class="tab-panel" id="panel-guia">
+      <div class="filter-bar" style="margin-bottom:16px">
+        <input type="text" id="searchGuia" class="form-control" placeholder="Buscar nome, e-mail, WhatsApp...">
+        <select id="filterLP" class="form-control">
+          <option value="">Todas as LPs</option>
+        </select>
+        <select id="filterMesGuia" class="form-control"></select>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table" id="guiaTable">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>WhatsApp</th>
+                <th>LP de origem</th>
+                <th>Qualificação</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="guiaBody">
+              <tr><td colspan="6" class="text-center text-muted" style="padding:24px"><i class="fas fa-spinner fa-spin"></i> Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
   </main>
 </div>
 
-<!-- Modal Editar Lead -->
+<!-- Modal editar lead do site -->
 <div id="editModal" class="modal-overlay hidden">
   <div class="modal">
     <div class="modal-header">
-      <h3>Editar Lead</h3>
+      <h3>Editar lead</h3>
       <button class="btn btn-ghost btn-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="editId">
       <div class="form-group">
         <label class="form-label">Status</label>
-        <select class="form-control" id="editStatus">
+        <select class="form-control" id="editStatus" style="min-width:100%;width:100%">
           <option value="novo">Novo</option>
           <option value="em_contato">Em contato</option>
           <option value="proposta">Proposta enviada</option>
@@ -122,7 +151,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">Notas internas</label>
-        <textarea class="form-control" id="editNotes" rows="3" placeholder="Anotações sobre este lead..."></textarea>
+        <textarea class="form-control" id="editNotes" rows="3" style="width:100%;resize:vertical" placeholder="Anotações sobre este lead..."></textarea>
       </div>
     </div>
     <div class="modal-footer">
@@ -132,179 +161,260 @@
   </div>
 </div>
 
+<!-- Modal qualificação do guia -->
+<div id="qualModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Qualificação</h3>
+      <button class="btn btn-ghost btn-icon" onclick="closeQualModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="qualBody" style="font-size:13px;line-height:1.8;color:#e0dcff"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeQualModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <script src="../js/dataService.js"></script>
 <script src="../js/admin.js"></script>
 <script>
-  requireAuth();
+requireAuth();
 
-  let allLeads = [];
+let allSite = [], allGuia = [];
 
-  function populateMonthFilter() {
-    const select = document.getElementById('filterMes');
-    const months = [
-      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-    ];
-    const now = new Date();
-    for (let i = 0; i < 12; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const label = `${months[d.getMonth()]} ${d.getFullYear()}`;
-      const opt = document.createElement('option');
-      opt.value = value;
-      opt.textContent = label;
-      select.appendChild(opt);
-    }
+// ── Tabs ────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'guia') window.location.hash = 'guia';
+  else window.location.hash = '';
+}
+
+// ── Month filters ────────────────────────────────────
+function populateMonthFilter(selectId) {
+  const sel = document.getElementById(selectId);
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const now = new Date();
+  sel.innerHTML = '<option value="">Todos os meses</option>';
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    sel.insertAdjacentHTML('beforeend', `<option value="${val}">${months[d.getMonth()]} ${d.getFullYear()}</option>`);
   }
+}
 
-  function loadLeads() {
-    allLeads = DS.getLeads();
-    renderTable(allLeads);
+// ── Load & render site leads ─────────────────────────
+async function loadSite() {
+  allSite = await DS.getLeads();
+  document.getElementById('countSite').textContent = `(${allSite.length})`;
+  renderSite(allSite);
+}
+
+function renderSite(leads) {
+  const tbody = document.getElementById('siteBody');
+  if (!leads.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Nenhum lead encontrado.</td></tr>';
+    return;
   }
+  tbody.innerHTML = leads.map(l => {
+    const phone = (l.phone || '').replace(/\D/g, '');
+    return `
+      <tr>
+        <td><div class="lead-name">${l.name||'—'}</div><div class="text-muted text-small">${l.email||''}</div></td>
+        <td>${l.phone||'—'}</td>
+        <td>${l.project||'—'}</td>
+        <td>${statusBadge(l.status, LEAD_STATUS)}</td>
+        <td>${fmtDate(l.createdAt)}</td>
+        <td class="actions-cell">
+          ${phone ? `<a href="https://wa.me/55${phone}" target="_blank" class="btn btn-ghost btn-sm btn-icon btn-orange" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+          <button class="btn btn-ghost btn-sm btn-icon" title="Editar" onclick="openEditModal('${l.id}')"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-ghost btn-sm btn-icon btn-danger" title="Excluir" onclick="delSite('${l.id}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+  }).join('');
+}
 
-  function renderTable(leads) {
-    const tbody = document.getElementById('leadsBody');
-    if (!leads || leads.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum lead encontrado.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = leads.map(lead => {
-      const phone = lead.phone || lead.whatsapp || '';
-      const waLink = phone ? `https://wa.me/${phone.replace(/\D/g, '')}` : '#';
-      const origem = lead.origem || lead.source || 'outros';
-      const origemLabel = {
-        site: 'Site', instagram: 'Instagram', whatsapp: 'WhatsApp',
-        indicacao: 'Indicação', outros: 'Outros'
-      }[origem] || origem;
+function filterSite() {
+  const q = document.getElementById('searchSite').value.toLowerCase();
+  const st = document.getElementById('filterStatus').value;
+  const mes = document.getElementById('filterMes').value;
+  renderSite(allSite.filter(l => {
+    const matchQ = !q || [l.name, l.email, l.phone].some(f => f && f.toLowerCase().includes(q));
+    const matchSt = !st || l.status === st;
+    const matchM = !mes || (l.createdAt||'').startsWith(mes);
+    return matchQ && matchSt && matchM;
+  }));
+}
 
-      return `
-        <tr>
-          <td>
-            <div class="lead-name">${lead.name || '—'}</div>
-            <div class="text-muted text-small">${lead.email || ''}</div>
-          </td>
-          <td>${phone || '—'}</td>
-          <td>${lead.projectType || lead.project || '—'}</td>
-          <td><span class="badge badge-neutral">${origemLabel}</span></td>
-          <td>${statusBadge(lead.status)}</td>
-          <td>${fmtDate(lead.createdAt || lead.date)}</td>
-          <td class="actions-cell">
-            <a href="${waLink}" target="_blank" class="btn btn-icon btn-ghost btn-orange" title="Abrir WhatsApp">
-              <i class="fab fa-whatsapp"></i>
-            </a>
-            <button class="btn btn-icon btn-ghost" title="Editar status" onclick="openEditModal('${lead.id}')">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-icon btn-ghost btn-danger" title="Excluir lead" onclick="deleteLead('${lead.id}')">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
+// ── Load & render guia leads ─────────────────────────
+async function loadGuia() {
+  allGuia = await DS.getGuiaLeads();
+  document.getElementById('countGuia').textContent = `(${allGuia.length})`;
 
-  function filterLeads() {
-    const search = document.getElementById('searchInput').value.toLowerCase().trim();
-    const status = document.getElementById('filterStatus').value;
-    const origem = document.getElementById('filterOrigem').value;
-    const mes = document.getElementById('filterMes').value;
-
-    const filtered = allLeads.filter(lead => {
-      const matchSearch = !search || [
-        lead.name, lead.email, lead.phone, lead.whatsapp
-      ].some(f => f && f.toLowerCase().includes(search));
-
-      const matchStatus = !status || lead.status === status;
-
-      const leadOrigem = lead.origem || lead.source || 'outros';
-      const matchOrigem = !origem || leadOrigem === origem;
-
-      let matchMes = true;
-      if (mes) {
-        const dateStr = lead.createdAt || lead.date || '';
-        matchMes = dateStr.startsWith(mes);
-      }
-
-      return matchSearch && matchStatus && matchOrigem && matchMes;
-    });
-
-    renderTable(filtered);
-  }
-
-  function openEditModal(id) {
-    const lead = allLeads.find(l => l.id === id);
-    if (!lead) return;
-    document.getElementById('editId').value = id;
-    document.getElementById('editStatus').value = lead.status || 'novo';
-    document.getElementById('editNotes').value = lead.notes || '';
-    document.getElementById('editModal').classList.remove('hidden');
-  }
-
-  function closeModal() {
-    document.getElementById('editModal').classList.add('hidden');
-  }
-
-  function saveLead() {
-    const id = document.getElementById('editId').value;
-    const status = document.getElementById('editStatus').value;
-    const notes = document.getElementById('editNotes').value;
-    DS.updateLead(id, { status, notes });
-    showToast('Lead atualizado com sucesso!', 'success');
-    closeModal();
-    loadLeads();
-  }
-
-  function deleteLead(id) {
-    confirmDialog('Tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita.', () => {
-      DS.deleteLead(id);
-      showToast('Lead excluído.', 'info');
-      loadLeads();
-    });
-  }
-
-  function exportCSV() {
-    const leads = DS.getLeads();
-    if (!leads || leads.length === 0) {
-      showToast('Nenhum lead para exportar.', 'warning');
-      return;
-    }
-    const headers = ['ID', 'Nome', 'Email', 'WhatsApp', 'Projeto', 'Origem', 'Status', 'Data', 'Notas'];
-    const rows = leads.map(l => [
-      l.id || '',
-      l.name || '',
-      l.email || '',
-      l.phone || l.whatsapp || '',
-      l.projectType || l.project || '',
-      l.origem || l.source || '',
-      l.status || '',
-      l.createdAt || l.date || '',
-      (l.notes || '').replace(/,/g, ';').replace(/\n/g, ' ')
-    ]);
-    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `leads-${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exportado com sucesso!', 'success');
-  }
-
-  // Event listeners
-  document.getElementById('searchInput').addEventListener('input', filterLeads);
-  document.getElementById('filterStatus').addEventListener('change', filterLeads);
-  document.getElementById('filterOrigem').addEventListener('change', filterLeads);
-  document.getElementById('filterMes').addEventListener('change', filterLeads);
-
-  // Fechar modal ao clicar fora
-  document.getElementById('editModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+  // Popula filtro de LP
+  const lpSel = document.getElementById('filterLP');
+  const lps = [...new Set(allGuia.map(l => l.pagina || '').filter(Boolean))].sort();
+  lps.forEach(lp => {
+    const label = lp.replace('/guias/', '').replace(/\/$/, '') || lp;
+    lpSel.insertAdjacentHTML('beforeend', `<option value="${lp}">${label}</option>`);
   });
 
-  populateMonthFilter();
-  loadLeads();
+  renderGuia(allGuia);
+}
+
+function renderGuia(leads) {
+  const tbody = document.getElementById('guiaBody');
+  if (!leads.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Nenhum lead encontrado.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = leads.map(l => {
+    const lp = (l.pagina||'').replace('/guias/','').replace(/\/$/,'') || (l.pagina||'—');
+    const hasQual = l.qualificacao && Object.values(l.qualificacao).some(v => v);
+    const phone = (l.whatsapp||'').replace(/\D/g,'');
+    return `
+      <tr>
+        <td><div class="lead-name">${l.nome||'—'}</div><div class="text-muted text-small">${l.email||''}</div></td>
+        <td>${l.whatsapp||'—'}</td>
+        <td><span class="lp-tag" title="${l.pagina||''}">${lp}</span></td>
+        <td>${hasQual ? `<button class="qual-pill" onclick="showQual('${l.id}')">ver <i class="fas fa-eye" style="font-size:9px"></i></button>` : '<span style="color:var(--mute);font-size:11px">—</span>'}</td>
+        <td>${fmtDate(l.criadoEm)}</td>
+        <td class="actions-cell">
+          ${phone ? `<a href="https://wa.me/${phone}" target="_blank" class="btn btn-ghost btn-sm btn-icon btn-orange" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>` : ''}
+          <button class="btn btn-ghost btn-sm btn-icon btn-danger" title="Excluir" onclick="delGuia('${l.id}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function filterGuia() {
+  const q   = document.getElementById('searchGuia').value.toLowerCase();
+  const lp  = document.getElementById('filterLP').value;
+  const mes = document.getElementById('filterMesGuia').value;
+  renderGuia(allGuia.filter(l => {
+    const matchQ = !q || [l.nome, l.email, l.whatsapp].some(f => f && f.toLowerCase().includes(q));
+    const matchLP = !lp || l.pagina === lp;
+    const matchM  = !mes || (l.criadoEm||'').startsWith(mes);
+    return matchQ && matchLP && matchM;
+  }));
+}
+
+// ── Qualificação modal ───────────────────────────────
+function showQual(id) {
+  const lead = allGuia.find(l => l.id === id);
+  if (!lead || !lead.qualificacao) return;
+  const q = lead.qualificacao;
+  const rows = [
+    ['Objetivo / tipo', q.tipo_negocio || q.tipo || '—'],
+    ['Faturamento / experiência', q.faturamento_mensal || q.faturamento || '—'],
+    ['Maior dor / interesse', q.maior_dor || q.dor || '—'],
+    ['Respondido em', fmtDateTime(q.respondidoEm)],
+  ].filter(([,v]) => v && v !== '—');
+
+  document.getElementById('qualBody').innerHTML = `
+    <p style="margin-bottom:14px;color:var(--mute);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px">${lead.nome} · ${lead.email}</p>
+    ${rows.map(([k,v]) => `<div style="margin-bottom:10px"><span style="color:var(--mute);font-size:11px;text-transform:uppercase;font-family:var(--mono)">${k}</span><br>${v}</div>`).join('')}
+  `;
+  document.getElementById('qualModal').classList.remove('hidden');
+}
+
+function closeQualModal() { document.getElementById('qualModal').classList.add('hidden'); }
+
+// ── CRUD ─────────────────────────────────────────────
+function openEditModal(id) {
+  const lead = allSite.find(l => l.id === id);
+  if (!lead) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('editStatus').value = lead.status || 'novo';
+  document.getElementById('editNotes').value  = lead.notes  || '';
+  document.getElementById('editModal').classList.remove('hidden');
+}
+
+function closeModal() { document.getElementById('editModal').classList.add('hidden'); }
+
+async function saveLead() {
+  const id = document.getElementById('editId').value;
+  const status = document.getElementById('editStatus').value;
+  const notes  = document.getElementById('editNotes').value;
+  await DS.updateLead(id, { status, notes });
+  showToast('Lead atualizado!', 'success');
+  closeModal();
+  await loadSite();
+}
+
+function delSite(id) {
+  confirmDialog('Excluir este lead permanentemente?', async () => {
+    await DS.deleteLead(id);
+    showToast('Lead excluído.', 'info');
+    await loadSite();
+  });
+}
+
+function delGuia(id) {
+  confirmDialog('Excluir este lead de guia permanentemente?', async () => {
+    await DS.deleteGuiaLead(id);
+    showToast('Lead excluído.', 'info');
+    await loadGuia();
+  });
+}
+
+// ── Export CSV ───────────────────────────────────────
+function exportCSV() {
+  const active = document.querySelector('.tab-btn.active').textContent.trim();
+  const isGuia = active.includes('Guia');
+
+  if (isGuia) {
+    const hdr = ['ID','Nome','Email','WhatsApp','LP de origem','Qualificado','Data'];
+    const rows = allGuia.map(l => [
+      l.id||'', l.nome||'', l.email||'', l.whatsapp||'',
+      l.pagina||'', l.qualificacao ? 'sim' : 'não',
+      l.criadoEm||''
+    ]);
+    downloadCSV([hdr, ...rows], `guia-leads-${new Date().toISOString().slice(0,10)}.csv`);
+  } else {
+    const hdr = ['ID','Nome','Email','WhatsApp','Projeto','Status','Data','Notas'];
+    const rows = allSite.map(l => [
+      l.id||'', l.name||'', l.email||'', l.phone||'',
+      l.project||'', l.status||'', l.createdAt||'',
+      (l.notes||'').replace(/,/g,';').replace(/\n/g,' ')
+    ]);
+    downloadCSV([hdr, ...rows], `site-leads-${new Date().toISOString().slice(0,10)}.csv`);
+  }
+  showToast('CSV exportado!', 'success');
+}
+
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob(['﻿'+csv], { type: 'text/csv;charset=utf-8;' })),
+    download: filename
+  });
+  a.click();
+}
+
+// ── Init ─────────────────────────────────────────────
+document.getElementById('searchSite').addEventListener('input', filterSite);
+document.getElementById('filterStatus').addEventListener('change', filterSite);
+document.getElementById('filterMes').addEventListener('change', filterSite);
+document.getElementById('searchGuia').addEventListener('input', filterGuia);
+document.getElementById('filterLP').addEventListener('change', filterGuia);
+document.getElementById('filterMesGuia').addEventListener('change', filterGuia);
+
+document.getElementById('editModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.getElementById('qualModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeQualModal(); });
+
+populateMonthFilter('filterMes');
+populateMonthFilter('filterMesGuia');
+
+Promise.all([loadSite(), loadGuia()]);
+
+// Se URL tem #guia, abre a tab de guias
+if (window.location.hash === '#guia') {
+  const btn = document.querySelectorAll('.tab-btn')[1];
+  if (btn) switchTab('guia', btn);
+}
 </script>
 </body>
 </html>

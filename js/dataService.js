@@ -1,14 +1,14 @@
 // ══════════════════════════════════════════════════════
 //  Lança.dev — dataService.js
-//  Abstração de dados: localStorage (quotes) + API (leads)
+//  Abstração de dados: localStorage (quotes) + API (leads + guia)
 // ══════════════════════════════════════════════════════
 
 const ADMIN_KEY = 'lanca2025';
 
 const DS = {
   _keys: {
-    quotes:  'lancaOrcamentos',
-    config:  'lancaConfig',
+    quotes: 'lancaOrcamentos',
+    config: 'lancaConfig',
   },
 
   // ── Config ──────────────────────────────────────────
@@ -26,7 +26,7 @@ const DS = {
     localStorage.setItem(this._keys.config, JSON.stringify(cfg));
   },
 
-  // ── Leads (via API) ──────────────────────────────────
+  // ── Site Leads (formulário de contato) ──────────────
   async getLeads() {
     try {
       const res = await fetch('/api/leads', {
@@ -51,6 +51,27 @@ const DS = {
 
   async deleteLead(id) {
     await fetch(`/api/leads/${id}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Key': ADMIN_KEY },
+    });
+  },
+
+  // ── Guia/LP Leads (formulário das LPs de guias) ─────
+  async getGuiaLeads() {
+    try {
+      const res = await fetch('/api/guia', {
+        headers: { 'X-Admin-Key': ADMIN_KEY },
+      });
+      if (!res.ok) throw new Error('Unauthorized');
+      return await res.json();
+    } catch (e) {
+      console.error('[DS] getGuiaLeads:', e.message);
+      return [];
+    }
+  },
+
+  async deleteGuiaLead(id) {
+    await fetch(`/api/guia/${id}`, {
       method: 'DELETE',
       headers: { 'X-Admin-Key': ADMIN_KEY },
     });
@@ -95,10 +116,11 @@ const DS = {
 
   // ── Stats ────────────────────────────────────────────
   async getStats() {
-    const [leads, quotes] = await Promise.all([this.getLeads(), this.getQuotes()]);
-    const now  = new Date();
-    const month = now.getMonth();
-    const year  = now.getFullYear();
+    const [leads, guiaLeads, quotes] = await Promise.all([
+      this.getLeads(),
+      this.getGuiaLeads(),
+      Promise.resolve(this.getQuotes()),
+    ]);
 
     const paidQuotes  = quotes.filter(q => q.status === 'pago');
     const faturamento = paidQuotes.reduce((sum, q) => sum + (q.total || 0), 0);
@@ -109,11 +131,13 @@ const DS = {
     return {
       totalLeads:    leads.length,
       newLeads:      leads.filter(l => l.status === 'novo').length,
+      totalGuia:     guiaLeads.length,
       totalQuotes:   quotes.length,
       pendingQuotes: quotes.filter(q => q.status === 'pendente').length,
       faturamento,
       conversion,
       leads,
+      guiaLeads,
       quotes,
     };
   },
