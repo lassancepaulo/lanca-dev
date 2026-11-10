@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EP 02: Gere vídeos com IA no seu próprio PC | lança.dev</title>
+<meta name="description" content="Guia prático: ComfyUI instalado, modelo Wan 2.2 rodando e seu primeiro vídeo gerado por IA — tudo grátis no seu próprio PC. Baixe grátis.">
+<meta name="theme-color" content="#0d0b1a">
+<link rel="icon" type="image/svg+xml" href="/guia/assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="lança.dev">
+<meta property="og:title" content="EP 02: Gere vídeos com IA no seu próprio PC">
+<meta property="og:description" content="ComfyUI + Wan 2.2: gere vídeos com IA de graça, sem assinar nada, rodando no seu próprio PC.">
+<meta property="og:image" content="https://lanca.dev/guias/ep02-ia-video-local/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EP 02: Gere vídeos com IA no seu próprio PC">
+<meta name="twitter:description" content="ComfyUI + Wan 2.2: gere vídeos com IA de graça, sem assinar nada, rodando no seu próprio PC.">
+<meta name="twitter:image" content="https://lanca.dev/guias/ep02-ia-video-local/assets/og.png">
+<link rel="stylesheet" href="/guia/assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<header class="top"><div class="wrap"><a class="brand" href="/" aria-label="lança.dev, página inicial"><svg viewBox="0 0 10 10" aria-hidden="true" shape-rendering="crispEdges"><g fill="#ffd23f"><rect x="5" y="1" width="3" height="1"/><rect x="4" y="2" width="3" height="1"/><rect x="3" y="3" width="3" height="1"/><rect x="2" y="4" width="3" height="2"/><rect x="3" y="6" width="3" height="1"/><rect x="4" y="7" width="3" height="1"/><rect x="5" y="8" width="3" height="1"/></g></svg><span>lança.dev</span></a></div></header>
+<main id="main" class="wrap">
+<div class="grid">
+<div class="hero rise">
+<span class="tag">EP 02 — SÉRIE TESTEI NA PRÁTICA</span>
+<h1>Gere vídeos com IA no seu <em>próprio PC</em></h1>
+<p class="lead">ComfyUI instalado, modelo Wan 2.2 rodando e primeiro vídeo gerado — de graça, sem assinar nada, sem depender de nenhuma plataforma. Testei, funcionou, fiz o guia.</p>
+</div>
+<div class="cover rise d2"><img src="assets/og.png" width="560" height="560" alt="Capa do guia EP02 — Gere vídeos com IA no seu próprio PC, da série Testei na Prática"></div>
+<section class="inside" aria-labelledby="dentro">
+<h2 id="dentro">O que tem dentro</h2>
+<ul class="ck">
+<li>Como verificar se sua placa de vídeo aguenta (VRAM mínima e o que fazer se não tiver)</li>
+<li>Como instalar o ComfyUI portátil no Windows sem precisar de Python</li>
+<li>Como baixar o modelo Wan 2.2 (5B) do Hugging Face nas pastas certas</li>
+<li>O script pronto pra mandar um texto e receber o vídeo direto na pasta</li>
+<li>O prompt exato pra gerar o primeiro clipe e o que fazer se travar</li>
+</ul>
+</section>
+<section class="formcard card" aria-labelledby="baixar">
+<h2 id="baixar">Baixe o guia grátis</h2>
+<p class="sub">Leva 20 segundos. O PDF aparece na próxima tela.</p>
+<form id="lead-form" novalidate>
+<div class="field"><label class="lb" for="nome">Nome</label>
+<input type="text" id="nome" name="nome" autocomplete="name" aria-describedby="err-nome" placeholder="Seu nome"><p class="err" id="err-nome" role="alert"></p></div>
+<div class="field"><label class="lb" for="email">E-mail</label>
+<input type="email" id="email" name="email" autocomplete="email" inputmode="email" aria-describedby="err-email" placeholder="voce@email.com"><p class="err" id="err-email" role="alert"></p></div>
+<div class="field"><label class="lb" for="whatsapp">WhatsApp (com DDD)</label>
+<input type="tel" id="whatsapp" name="whatsapp" autocomplete="tel-national" inputmode="numeric" aria-describedby="hint-whatsapp err-whatsapp" placeholder="(11) 91234-5678"><p class="hint" id="hint-whatsapp">Só números, a máscara é automática.</p><p class="err" id="err-whatsapp" role="alert"></p></div>
+<div class="hp" aria-hidden="true"><label for="empresa_site">Não preencha este campo</label><input type="text" id="empresa_site" name="empresa_site" tabindex="-1" autocomplete="off"></div>
+<div class="field"><div class="consent"><input type="checkbox" id="consent" name="consent" required aria-describedby="err-consent"><label for="consent" id="consent-text">Ao baixar, você concorda em receber o guia e conteúdos da Lança.dev por e-mail e WhatsApp. Você pode cancelar quando quiser. Seus dados não são compartilhados com terceiros. <a href="/guia/privacidade.html">Política de privacidade</a></label></div><p class="err" id="err-consent" role="alert"></p></div>
+<button type="submit" class="btn" id="lead-btn">Quero baixar o guia</button>
+<p class="formerr" id="form-error" role="alert"></p>
+</form>
+</section>
+</div>
+<p class="proof">Testado na prática. Funciona.</p>
+</main>
+<footer><div class="wrap">lança.dev · série Testei na Prática · <a href="https://instagram.com/lanca.dev" rel="noopener">@lanca.dev</a><br><a href="/guia/privacidade.html">Política de privacidade</a></div></footer>
+<script src="config.js"></script>
+<script src="/guia/assets/lp.js"></script>
+</body>
+</html>
